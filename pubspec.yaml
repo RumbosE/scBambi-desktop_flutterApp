@@ -1,0 +1,22 @@
+name: sc_flutter_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  bloc: ^8.1.4
+  flutter_bloc: ^8.1.6
+  flutter_lints: ^3.0.0
+  flutter_test:
+    sdk: flutter
+  go_router: ^14.2.8
+
+flutter:
+  uses-material-design: true
