@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sc_flutter_app/presentation/widgets/main_drawer_widget.dart';
+import 'package:sc_flutter_app/presentation/screens/home/widgets/main_drawer_widget.dart';
 
 class HomeScreen extends StatelessWidget {
 
@@ -16,21 +16,25 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Fundacion Hogar Bambi'),
         iconTheme: const IconThemeData(
-          color: Colors.white
+          color: Colors.white, // Cambia este color al que desees
         ),
-        actions: const [
-          IconButton(
-            icon: Icon(Icons.home),
-            onPressed: null,
-          )
-        ],
-      ),
-      body: Center(
-        child: Text('Sistema de Gestion:\n Direccion Administrativa Socio-legal',
-                  style: TextStyle(fontSize:36, color: colors.primary, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
-                  textAlign: TextAlign.center,),
-      ),
+        ),
 
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+                Text('Sistema de Gestion:\n Direccion Administrativa Socio-legal',
+                    style: TextStyle(fontSize:36, color: colors.primary, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                ),
+
+                const SizedBox(height: 20, width: 20,),
+                
+                Image.asset('assets/images/HBV_logo.png', width: 200, height: 200),
+            ]
+        ),
+      ),
       drawer: const MainDrawer()
     );
   }
