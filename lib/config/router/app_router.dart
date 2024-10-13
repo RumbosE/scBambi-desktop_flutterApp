@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
+import 'package:sc_flutter_app/presentation/screens/form-child/form-child_screen.dart';
 import 'package:sc_flutter_app/presentation/screens/home/home_screen.dart';
+import 'package:sc_flutter_app/presentation/screens/info-child/info-child_screen.dart';
 import 'package:sc_flutter_app/presentation/screens/system/system_screen.dart';
 
 // GoRouter configuration
@@ -16,7 +18,20 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/system',
       name: SystemScreen.name,
-      builder: (context, state) => SystemScreen(),
-      )
+      builder: (context, state) => const SystemScreen(),
+      ),
+
+    GoRoute(
+      path: '/system/add',
+      name: FormChildScreen.name,
+      builder: (context, state) => const FormChildScreen(),
+    ),
+
+    GoRoute(
+      path: '/system/info',
+      name: InfoChildScreen.name,
+      builder: (context, state) => const InfoChildScreen(),
+    ),
   ],
+
 );

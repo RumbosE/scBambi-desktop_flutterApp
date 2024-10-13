@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sc_flutter_app/presentation/screens/system/widgets/system_widgets.dart';
+import 'package:sc_flutter_app/presentation/widgets/custom-input_widgets.dart';
+import 'package:sc_flutter_app/presentation/widgets/date-inputs_widgets.dart';
 
-enum Sexo { masculino, femenino }
+enum SearchState { ingresados, egresados }
 
 class SystemScreen extends StatefulWidget {
   static const String name = 'system_screen';
@@ -15,26 +17,21 @@ class SystemScreen extends StatefulWidget {
 }
 
 class _SystemScreenState extends State<SystemScreen> {
-  final TextEditingController _yearController = TextEditingController();
+  final TextEditingController _dateStartController = TextEditingController();
+  final TextEditingController _dateEndController = TextEditingController(text: DateTime.now().toString().split(" ")[0]);
+
   int _selectedIndex = 0;
   int _currentPage = 1;
-  Sexo? _selectedSexo;
 
   @override
   void dispose() {
-    _yearController.dispose();
+    _dateStartController.dispose();
     super.dispose();
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  void onSexoSelected(Sexo sexo) {
-    setState(() {
-      _selectedSexo = sexo;
     });
   }
 
@@ -54,6 +51,9 @@ class _SystemScreenState extends State<SystemScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sistema'),
@@ -64,131 +64,87 @@ class _SystemScreenState extends State<SystemScreen> {
             context.pop();
           },
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              label: const Text('Agregar'), 
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                context.push('/system/add');
+              }
+            ),
+          )
+        ]
       ),
 
-      // ignore: prefer_const_constructors
       body: Column(
         children: [
           const SizedBox(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const Text('Filtrar por:'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text('Sexo:'),
-                  const SizedBox(
-                      width: 5), // Espacio reducido entre los botones
-
-                  ElevatedButton(
-                    onPressed: () {
-                      // Acción del botón 1
-                      onSexoSelected(Sexo.masculino);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _selectedSexo == Sexo.masculino ? Colors.green : null,
-                      padding: const EdgeInsets.all(8.0),
-                      textStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      foregroundColor: _selectedSexo == Sexo.masculino
-                          ? Colors.white
-                          : null,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0)),
-                      ),
-                    ),
-                    child: const Text('M'),
-                  ),
-                  const SizedBox(
-                      width: 5), // Espacio reducido entre los botones
-                  ElevatedButton(
-                    onPressed: () {
-                      // Acción del botón 2
-                      onSexoSelected(Sexo.femenino);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          _selectedSexo == Sexo.femenino ? Colors.green : null,
-                      padding: const EdgeInsets.all(8.0),
-                      textStyle: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      foregroundColor: _selectedSexo == Sexo.femenino
-                          ? Colors.white
-                          : null,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(0)),
-                      ),
-                    ),
-                    child: const Text('F'),
-                  ),
-                ],
-              ),
               const SizedBox(width: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text('Año de nacimiento:'),
+                  const Text('Periodo de tiempo'),
+                  
                   const SizedBox(
                       width: 5), // Espacio reducido entre los botones
-
-                  SizedBox(
-                    width: 100,
-                    height: 40,
-                    child: TextField(
-                      maxLength: 4,
-                      controller: _yearController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Año',
-                        border: OutlineInputBorder(),
-                        counterText: '',
-                      ),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ], // Permitir solo números
-                    ),
+                  DateInput(
+                    dateController: _dateStartController,
+                    setState: setState,
+                    label: 'Desde',
+                  ),
+                  const SizedBox(width: 5),
+                  DateInput(
+                    dateController: _dateEndController,
+                    setState: setState,
+                    label: 'Hasta',
                   ),
                 ],
               ),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () {
-                  if (_yearController.text.length < 4 &&
-                      _yearController.text.isNotEmpty) {
-                    // Mostrar un mensaje de error o realizar alguna acción
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content:
-                              Text('El año debe tener al menos 4 caracteres')),
-                    );
-                  } else {
-                    // Acción cuando la longitud es válida
-                  }
+                  // ignore: avoid_print
+                  print('Filtrar');
                 },
-                child: const Text('Filtrar'),
+                icon: const Icon(Icons.filter_list),
+                label: const Text('Filtrar'),
+                
               ),
             ],
           ),
           const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Buscar por Nro Expediente o nombre...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomInput(
+                  icon: Icon(Icons.boy),
+                  hint: 'Buscar por nombre',
+                  labelText: 'Nombre',
+                  keyboardType: TextInputType.text,
+                  inputWidth: 400,
                 ),
-              ),
+                CustomInput(
+                  icon: Icon(Icons.menu_book_outlined),
+                  hint: 'Buscar por Numero de expediente',
+                  labelText: 'Nro - Expediente',
+                  keyboardType: TextInputType.number,
+                  inputWidth: 400,
+                ),
+              ],
             ),
           ),
+
           const SizedBox(height: 20),
-          const _TableChild(),
+
+          
+          const TableChild(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -203,70 +159,6 @@ class _SystemScreenState extends State<SystemScreen> {
                 onPressed: _nextPage,
                 child: const Text('Siguiente'),
               ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TableChild extends StatelessWidget {
-  
-  const _TableChild();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Table(
-        border: TableBorder.all(),
-        children: const [
-          TableRow(
-            children: [
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Nro - Expediente'))),
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0), child: Text('Nombre'))),
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Fecha de Nacimiento'))),
-            ],
-          ),
-          TableRow(
-            children: [
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Row 1, Col 1'))),
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Row 1, Col 2'))),
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Row 1, Col 3'))),
-            ],
-          ),
-          TableRow(
-            children: [
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Row 2, Col 1'))),
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Row 2, Col 2'))),
-              TableCell(
-                  child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('Row 2, Col 3'))),
             ],
           ),
         ],
