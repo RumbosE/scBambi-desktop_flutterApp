@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TableChild extends StatelessWidget {
   
-  const TableChild();
+  const TableChild({super.key});
 
   @override
   Widget build(BuildContext context) {

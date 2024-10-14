@@ -8,6 +8,7 @@ class CustomInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? errorMessage;
   final double? inputWidth;
+  final Function(String)? onChanged;
 
 
   const CustomInput({
@@ -17,7 +18,8 @@ class CustomInput extends StatelessWidget {
     this.labelText, 
     this.keyboardType, 
     this.errorMessage,
-    this.inputWidth,
+    this.inputWidth, 
+    this.onChanged,
 
     });
 
@@ -25,8 +27,9 @@ class CustomInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: (inputWidth != null) ? inputWidth : 200  , // Cambia este valor al ancho deseado
+      width: (inputWidth != null) ? inputWidth : 200  ,
       child: TextFormField(
+        onChanged: onChanged,
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
