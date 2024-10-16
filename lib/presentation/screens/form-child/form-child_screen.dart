@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 
 class FormChildScreen extends StatelessWidget {
   
@@ -7,6 +9,18 @@ class FormChildScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Form to Add'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            color: Colors.white,
+            onPressed: () {
+              context.pop();
+            },
+          ),
+      ),
+      body: const SingleChildScrollView(),
+    );
   }
 }

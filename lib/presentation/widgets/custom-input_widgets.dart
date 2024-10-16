@@ -33,6 +33,7 @@ class CustomInput extends StatelessWidget {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
+          hintStyle: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w300),
           prefixIcon: icon,
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0)),

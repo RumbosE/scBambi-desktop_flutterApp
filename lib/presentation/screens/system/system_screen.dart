@@ -17,7 +17,6 @@ class SystemScreen extends StatefulWidget {
 }
 
 class _SystemScreenState extends State<SystemScreen> {
-
   int _currentPage = 1;
 
   void _previousPage() {
@@ -36,41 +35,26 @@ class _SystemScreenState extends State<SystemScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Sistema'),
-          leading: IconButton(
+        title: const Text('Sistema'),
+        leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
             color: Colors.white,
             onPressed: () {
               context.pop();
-            },
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton.icon(
-                  label: const Text('Agregar'),
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    context.push('/system/add');
-                  }),
-            )
-          ]),
+            }),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
-        
             BlocProvider(
               create: (context) => SearchFilterCubit(),
               child: const _FiltersContainer(),
             ),
-        
             const SizedBox(height: 20),
             const TableChild(),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -78,9 +62,9 @@ class _SystemScreenState extends State<SystemScreen> {
                   onPressed: _previousPage,
                   child: const Text('Anterior'),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 10),
                 Text('Página $_currentPage'),
-                const SizedBox(width: 5),
+                const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _nextPage,
                   child: const Text('Siguiente'),
@@ -90,79 +74,91 @@ class _SystemScreenState extends State<SystemScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+          icon: const Icon(Icons.add),
+          label: const Text('Agregar al sistema'),
+          onPressed: () {
+            context.push('/system/add');
+          }),
     );
   }
 }
 
 class _FiltersContainer extends StatelessWidget {
-
   const _FiltersContainer();
 
   @override
   Widget build(BuildContext context) {
-
     final filterCubit = context.watch<SearchFilterCubit>();
 
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text('Filtrar por:'),
-            const SizedBox(width: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text('Periodo de tiempo'),
-                const SizedBox(width: 5), // Espacio reducido entre los botones
-                DateInput(
-                  initialValue: filterCubit.state.startDate,
-                  onChanged: filterCubit.setStartDate,
-                  label: 'Desde',
-                ),
-                const SizedBox(width: 5),
-                DateInput(
-                  initialValue: filterCubit.state.endDate,
-                  onChanged: filterCubit.setEndDate,
-                  label: 'Hasta',
-                ),
-              ],
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                // ignore: avoid_print
-                filterCubit.onSubmitted();
-                print('Filtrar');
-              },
-              icon: const Icon(Icons.filter_list),
-              label: const Text('Filtrar'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              CustomInput(
-                icon: const Icon(Icons.boy),
-                hint: 'Buscar por nombre',
-                labelText: 'Nombre',
-                keyboardType: TextInputType.text,
-                inputWidth: 400,
-                onChanged: (value) => filterCubit.setName(value),
-              ),
-              CustomInput(
-                icon: const Icon(Icons.menu_book_outlined),
-                hint: 'Buscar por Numero de expediente',
-                labelText: 'Nro - Expediente',
-                keyboardType: TextInputType.text,
-                inputWidth: 400,
-                onChanged: (value) => filterCubit.setNroExp(value),
+              const Text('Filtrar por:'),
+              const SizedBox(width: 10),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text('Periodo de tiempo'),
+                    const SizedBox(width: 5), // Espacio reducido entre los botones
+                    DateInput(
+                      initialValue: filterCubit.state.startDate,
+                      onChanged: filterCubit.setStartDate,
+                      label: 'Desde',
+                    ),
+                    const SizedBox(width: 5),
+                    DateInput(
+                      initialValue: filterCubit.state.endDate,
+                      onChanged: filterCubit.setEndDate,
+                      label: 'Hasta',
+                    ),
+                  ],
+                ),
+              const SizedBox(width: 10),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // ignore: avoid_print
+                  filterCubit.onSubmitted();
+                  print('Filtrar');
+                },
+                icon: const Icon(Icons.filter_list),
+                label: const Text('Filtrar'),
               ),
             ],
           ),
+        ),
+        const SizedBox(height: 20),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomInput(
+                    icon: const Icon(Icons.boy),
+                    hint: 'Buscar por nombre',
+                    labelText: 'Nombre',
+                    keyboardType: TextInputType.text,
+                    inputWidth: 400,
+                    onChanged: (value) => filterCubit.setName(value),
+                  ),
+                  const SizedBox(width: 10),
+                  CustomInput(
+                    icon: const Icon(Icons.menu_book_outlined),
+                    hint: 'Buscar por Numero de expediente',
+                    labelText: 'Nro - Expediente',
+                    keyboardType: TextInputType.text,
+                    inputWidth: 400,
+                    onChanged: (value) => filterCubit.setNroExp(value),
+                  ),
+                ],
+              ),
+            ),
         ),
       ],
     );
