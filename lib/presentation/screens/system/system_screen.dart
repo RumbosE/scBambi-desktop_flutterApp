@@ -54,7 +54,10 @@ class _SystemScreenState extends State<SystemScreen> {
               child: const _FiltersContainer(),
             ),
             const SizedBox(height: 20),
+
             const TableChild(),
+            const SizedBox(height: 20),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -5,7 +5,7 @@ class DateInput extends StatefulWidget {
   final String label;
   final DateTime? initialValue;
 
-  DateInput({required this.onChanged, required this.label, this.initialValue});
+  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue});
 
   @override
   _DateInputState createState() => _DateInputState();
