@@ -55,7 +55,7 @@ class _SystemScreenState extends State<SystemScreen> {
             ),
             const SizedBox(height: 20),
 
-            const TableChild(),
+            const TableChildren(),
             const SizedBox(height: 20),
 
             Row(

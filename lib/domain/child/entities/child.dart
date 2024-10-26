@@ -42,7 +42,7 @@ class Child {
   }
 }
 
-abstract class Responsible {
+class Responsible {
   final List<String> names;
   final List<String> docsId;
   final List<String> contactNro;
@@ -54,7 +54,7 @@ abstract class Responsible {
   });
 }
 
-abstract class FoundationHistory {
+class FoundationHistory {
   final String? courtId;
   final String? entryDate;
   final String? reentryDate;
