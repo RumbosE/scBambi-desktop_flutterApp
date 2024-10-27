@@ -34,45 +34,49 @@ class _TableChildrenState extends State<_TableChildren> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: BlocBuilder<ChildrenBlocBloc, ChildrenBlocState>(
-            
-        builder: (context, state) {
-
-            if (state.status == ChildrenStatus.loading && state.children.isEmpty) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state.status == ChildrenStatus.error) {
-              return const Center(
-                child: Text('Algo inesperado paso'),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: BlocBuilder<ChildrenBlocBloc, ChildrenBlocState>(
+              
+          builder: (context, state) {
+      
+              if (state.status == ChildrenStatus.loading && state.children.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+      
+              if (state.status == ChildrenStatus.error) {
+                return const Center(
+                  child: Text('Algo inesperado paso'),
+                );
+              }
+      
+              if (state.children.isEmpty){
+                return const Center(
+                  child: Text('Esto esta vacio compa'),
+                );
+              }
+      
+            return DataTable(
+              border: TableBorder.all(
+                color: Colors.green, // Color del borde
+                width: 2.0, // Grosor del borde
+              ),
+              columns: const [
+                        DataColumn(label: Text('Nro Expediente')),
+                        DataColumn(label: Text('Nombre')),
+                        DataColumn(label: Text('Fecha Ingreso')),
+                      ],
+              rows: state.children.map((child) => DataRow(
+                cells: [
+                  DataCell(Text(child.foundationId ?? '1')),
+                  DataCell(Text('${child.name} ${child.lastName}')),
+                  DataCell(Text(child.history?.entryDate ?? 'N/A')),
+                ],
+              )).toList(),
               );
-            }
-
-            if (state.children.isEmpty){
-              return const Center(
-                child: Text('Esto esta vacio compa'),
-              );
-            }
-
-          return DataTable(
-            columns: const [
-                      DataColumn(label: Text('Nro Expediente')),
-                      DataColumn(label: Text('Nombre')),
-                      DataColumn(label: Text('Fecha Ingreso')),
-                    ],
-            rows: List<DataRow>.generate(
-                state.children.length,
-                (index) => DataRow(
-                  cells: [
-                    DataCell(Text(state.children[index].foundationId != null ? state.children[index].foundationId! : '1' )),
-                    DataCell(Text(state.children[index].name!)),
-                    DataCell(Text(state.children[index].history!.entryDate!))
-                  ])
-            )
-          );
-      },
+        },
+        ),
       ),
     );
   }
