@@ -144,8 +144,8 @@ class _FiltersContainer extends StatelessWidget {
                 children: [
                   CustomInput(
                     icon: const Icon(Icons.boy),
-                    hint: 'Buscar por nombre',
-                    labelText: 'Nombre',
+                    hint: 'Nombre',
+                    labelText: 'Buscar por nombre',
                     keyboardType: TextInputType.text,
                     inputWidth: 400,
                     onChanged: (value) => filterCubit.setName(value),
@@ -153,8 +153,8 @@ class _FiltersContainer extends StatelessWidget {
                   const SizedBox(width: 10),
                   CustomInput(
                     icon: const Icon(Icons.menu_book_outlined),
-                    hint: 'Buscar por Numero de expediente',
-                    labelText: 'Nro - Expediente',
+                    hint: 'Nro - Expediente',
+                    labelText: 'Buscar por Nro Expediente',
                     keyboardType: TextInputType.text,
                     inputWidth: 400,
                     onChanged: (value) => filterCubit.setNroExp(value),
