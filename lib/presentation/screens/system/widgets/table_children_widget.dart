@@ -35,6 +35,9 @@ class _TableChildrenState extends State<_TableChildren> {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -124,21 +127,17 @@ class _TableChildrenState extends State<_TableChildren> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            IconButton.outlined(
+                            IconButton(
                               onPressed: (){
-                                context.push('/system/info');
+                                context.push('/system/info/${child.id}');
                               },
-                              mouseCursor: MouseCursor.defer,
                               icon: const Icon(Icons.remove_red_eye_rounded),
                             ),
-                            IconButton.outlined(
+                            IconButton(
                               onPressed: (){ },
-                              color: Colors.lightBlueAccent,
-                              mouseCursor: MouseCursor.defer,
                               icon: const Icon(Icons.edit),
                             ),
                             IconButton.filled(
-                              color: Colors.redAccent,
                               onPressed: (){ },
                               mouseCursor: MouseCursor.defer,
                               icon: const Icon(Icons.delete),
@@ -147,7 +146,7 @@ class _TableChildrenState extends State<_TableChildren> {
                           ]),
                   ))
                 ]
-              )).toList()
+              ))
             ],
           );
         }),

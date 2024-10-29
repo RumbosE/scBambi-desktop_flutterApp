@@ -28,9 +28,9 @@ final appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: '/system/info',
+      path: '/system/info/:id',
       name: InfoChildScreen.name,
-      builder: (context, state) => const InfoChildScreen(),
+      builder: (context, state) => InfoChildScreen(idChild: state.pathParameters['id'] ?? ''),
     ),
   ],
 
