@@ -22,9 +22,7 @@ class InfoChildScreen extends StatelessWidget {
 }
 
 class _ChildView extends StatelessWidget {
-  const _ChildView({
-    super.key,
-  });
+  const _ChildView();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +57,10 @@ class _ChildView extends StatelessWidget {
               IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
             ],
           ),
-          body: _ChildDetailsView(state.child),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32.0),
+            child: _ChildDetailsView(state.child),
+          ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {},
             icon: const Icon(Icons.edit),
@@ -78,62 +79,134 @@ class _ChildDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const HeaderInfo(title: 'Datos Personales'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ItemInfoChild(
-                      title: 'Nombre',
-                      value: child.name!,
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    ItemInfoChild(
-                      title: 'Apellido',
-                      value: child.lastName!,
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ItemInfoChild(
-                      title: 'Identification',
-                      value: child.personalId!,
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    ItemInfoChild(
-                      title: 'Fecha de Nacimiento',
-                      value: child.birthDate!,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 48.0,
-            ),
-            
-            const HeaderInfo(title: 'Representantes o Responsables'),
 
-            ItemInfoChild(title: 'Nombre (s)', value: child.responsible?.names.toString(),)
-          ],
+    final colors = Theme.of(context).colorScheme;
+
+    return Center(
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Card(
+              color: Colors.white,
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const HeaderInfo(title: 'Datos Personales'),
+                      ItemInfoChild(title: 'Nombre', value: child.name),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Apellido', value: child.lastName),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Identificacion', value: child.personalId),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Fecha de Nacimiento', value: child.birthDate),
+
+
+                      const SizedBox(height: 24,),
+                      const HeaderInfo(title: 'Representantes o Responsables'),
+                      //ItemInfoChild(title: 'Nombre(s)', value: child.responsible?.names?.toString()),
+                      _ListItemWidget(title: 'Nombre(s)', items: child.responsible.names ?? []),
+                      const SizedBox(height: 8,),
+                      //ItemInfoChild(title: 'Identificacion(es)', value: child.responsible?.docsId?.toString()),
+                      _ListItemWidget(title: 'Identificacion(es)', items: child.responsible.docsId ?? []),
+                      const SizedBox(height: 8,),
+                      //ItemInfoChild(title: 'Contacto(s)', value: child.responsible?.contactNro?.toString()),
+                      _ListItemWidget(title: 'Contacto(s)', items: child.responsible.contactNro ?? []),
+
+
+                      const SizedBox(height: 24,),
+                      const HeaderInfo(title: 'Datos Fundacionales'),
+                      ItemInfoChild(title: 'COD Corte', value: child.history.courtId),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Fecha de Ingreso', value: child.history.entryDate),
+                      const SizedBox(height: 16,),
+                      _ListItemWidget (title: 'Motivo(s) Ingreso', items: child.history.entryReason ?? []),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Fecha de Reingreso', value: child.history.reentryDate),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Fecha de Salida', value: child.history.departureDate),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Motivo Salida', value: child.history.departureReason),
+                      const SizedBox(height: 8,),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: colors.primaryFixed,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Organización Judicial: ${child.foundationId?? ' '}',
+                            style: const TextStyle(
+                                color: Colors.black45,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0)),
+                      ),
+                      Text(
+                        child.history.organization ?? '--no-tiene--',
+                        style: const TextStyle(fontSize: 16.0),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      )
+
+                    ],
+                  ),
+                )
+              ),
+            )));
+  }
+}
+
+class _ListItemWidget extends StatelessWidget {
+  final String title;
+  final List<String> items;
+
+  const _ListItemWidget({required this.title, required this.items});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.black54,
+            fontWeight: FontWeight.w600,
+            fontSize: 12.0,
+          ),
         ),
-      ),
+        const SizedBox(height: 8.0),
+        if (items.isEmpty) const Text('No hay registrados') else ...items.map((r) => _ItemListWidget(item :r)),
+      ],
     );
   }
 }
+
+class _ItemListWidget extends StatelessWidget {
+  final String item;
+  const _ItemListWidget({ required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Icon(Icons.circle, color: Colors.green, size: 8,),
+        const SizedBox(width: 8.0),
+        Text(
+          item,
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 16.0,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
