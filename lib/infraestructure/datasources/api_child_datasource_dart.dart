@@ -10,6 +10,7 @@ var localChildren = [
     birthDate: '27/08/2002',
     history:
         FoundationHistory(entryDate: '25/01/2020', departureDate: '11/10/2022'),
+    responsible: Responsible(names: ['Antonio', 'Luisa'], contactNro: ['04149078738, 04123123123'])
   ),
   Child(
     id: '2',

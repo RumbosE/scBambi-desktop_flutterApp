@@ -129,7 +129,28 @@ class _ChildDetailsView extends StatelessWidget {
             
             const HeaderInfo(title: 'Representantes o Responsables'),
 
-            ItemInfoChild(title: 'Nombre (s)', value: child.responsible?.names.toString(),)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ItemInfoChild(title: 'Nombre (s)', value: child.responsible?.names.toString(), smallLetters: true,),
+                    const SizedBox(height: 16.0,),
+                    ItemInfoChild(title: 'Identificacion (es)', value: child.responsible?.docsId.toString(), smallLetters: true),
+                  ],
+                ),
+                ItemInfoChild(title: 'Contacto (s)', value: child.responsible?.contactNro.toString(),smallLetters: true,),
+              ],
+            ),
+
+            
+            const SizedBox(
+              height: 48.0,
+            ),
+            
+            const HeaderInfo(title: 'Datos Fundación Hogar Bambi')
           ],
         ),
       ),
