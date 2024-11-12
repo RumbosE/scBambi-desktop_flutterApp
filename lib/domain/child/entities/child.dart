@@ -5,8 +5,8 @@ class Child {
   final String? lastName;
   final String? personalId;
   final String? birthDate;
-  final Responsible? responsible;
-  final FoundationHistory? history;
+  final Responsible responsible;
+  final FoundationHistory history;
 
   Child({
     required this.id,
@@ -15,8 +15,8 @@ class Child {
     this.lastName,
     this.personalId,
     this.birthDate,
-    this.responsible,
-    this.history,
+    required this.responsible,
+    required this.history,
   });
 
   Child copyWith({
@@ -43,14 +43,14 @@ class Child {
 }
 
 class Responsible {
-  final List<String> names;
-  final List<String> docsId;
-  final List<String> contactNro;
+  final List<String>? names;
+  final List<String>?docsId;
+  final List<String>? contactNro;
 
   Responsible({
-    this.names = const [],
-    this.docsId = const [],
-    this.contactNro = const [],
+    this.names,
+    this.docsId,
+    this.contactNro,
   });
 }
 
@@ -59,7 +59,7 @@ class FoundationHistory {
   final String? entryDate;
   final String? reentryDate;
   final String? departureDate;
-  final List<String> entryReason;
+  final List<String>? entryReason;
   final String? departureReason;
   final String? organization;
 
@@ -69,7 +69,7 @@ class FoundationHistory {
     this.entryDate,
     this.reentryDate,
     this.departureDate,
-    this.entryReason = const [],
+    this.entryReason,
     this.departureReason,
     this.organization,
   });

@@ -36,8 +36,6 @@ class _TableChildrenState extends State<_TableChildren> {
   @override
   Widget build(BuildContext context) {
 
-    final colors = Theme.of(context).colorScheme;
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -118,7 +116,7 @@ class _TableChildrenState extends State<_TableChildren> {
                   TableCell(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(child.history!.entryDate!),
+                        child: Text(child.history.entryDate!),
                       )
                   ),
                   TableCell(

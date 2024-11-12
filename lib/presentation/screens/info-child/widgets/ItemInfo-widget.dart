@@ -9,9 +9,8 @@ class ItemInfoChild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final colors = Theme.of(context).colorScheme;
-    
+
     return Row(
       children: [
         Container(
@@ -20,19 +19,23 @@ class ItemInfoChild extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           padding: const EdgeInsets.all(8.0),
-          child: Text('$title: ' ,
-              style: TextStyle(
+          child: Text('$title: ',
+              style: const TextStyle(
                   color: Colors.black45,
                   fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.normal,
-                  fontSize: smallLetters ? 16.0 : 24.0 )),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0)),
         ),
         const SizedBox(
           width: 8.0,
         ),
-        Text(
-          value ?? '--no-tiene--',
-          style: TextStyle(fontSize: smallLetters ? 16.0 : 24.0 , ),
+        Expanded(
+          child: Text(
+            value ?? '--no-tiene--',
+            style: const TextStyle(fontSize: 16.0),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
         )
       ],
     );
