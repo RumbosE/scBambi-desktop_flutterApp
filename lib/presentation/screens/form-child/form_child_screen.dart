@@ -85,67 +85,71 @@ class _FormChildScreenState extends State<FormChildScreen> {
 
   List<Step> getSteps(ChildFormCubit fcubit) => [
         Step(
-            isActive: currentStep >= 0,
-            title: const Text('Datos Personales'),
-            content: Center(
-                child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: Card(
-                        color: Colors.white,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(16.00),
-                          child: Form(
-                            child: Column(
-                              children: <Widget>[
-                                const HeaderInfo(title: 'Datos Personales'),
-                                CustomInput(
-                                  labelText: 'Nombres *',
-                                  keyboardType: TextInputType.text,
-                                  initialState: fcubit.state.child.name,
-                                  hint: '*Campo requerido*',
-                                  isRequired: true,
-                                  onChanged:fcubit.setName,
-                                  inputWidth: double.infinity,
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                CustomInput(
-                                  labelText: 'Apellidos *',
-                                  hint: '*Campo requerido*',
-                                  initialState: fcubit.state.child.lastName,
-                                  onChanged: fcubit.setLastName,
-                                  keyboardType: TextInputType.text,
-                                  inputWidth: double.infinity,
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                CustomInput(
-                                  labelText: 'Identificación',
-                                  keyboardType: TextInputType.text,
-                                  onChanged: fcubit.setIdentification,
-                                  inputWidth: double.infinity,
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                DateInput(
-                                  onChanged: fcubit.setBirthDate,
-                                  label: 'Fecha de Nacimiento',
-                                  width: double.infinity,
-                                  initialValue: fcubit.state.child.birthDate != null
-                                      ? DateTime.parse(fcubit.state.child.birthDate!)
-                                      : null,
-                                )
-                              ],
-                            ),
-                          ),
-                        ))))),
+          isActive: currentStep >= 0,
+          title: const Text('Datos Personales'),
+          content: Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.6,
+              child: Card(
+                color: Colors.white,
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(16.00),
+                  child: Column(
+                    children: <Widget>[
+                      const HeaderInfo(title: 'Datos Personales'),
+                      CustomInput(
+                        labelText: 'Nombres *',
+                        keyboardType: TextInputType.text,
+                        initialState: fcubit.state.child.name,
+                        hint: '*Campo requerido*',
+                        errorMessage: fcubit.state.status == FormStatus.error && ( fcubit.state.child.name == null || fcubit.state.child.name!.isEmpty )? 'El nombre es requerido': null,
+                        onChanged:fcubit.setName,
+                        inputWidth: double.infinity,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      CustomInput(
+                        labelText: 'Apellidos *',
+                        hint: '*Campo requerido*',
+                        initialState: fcubit.state.child.lastName,
+                        errorMessage: fcubit.state.status == FormStatus.error && ( fcubit.state.child.lastName == null || fcubit.state.child.lastName!.isEmpty )? 'El apellido es requerido': null,
+                        onChanged: fcubit.setLastName,
+                        keyboardType: TextInputType.text,
+                        inputWidth: double.infinity,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      CustomInput(
+                        labelText: 'Identificación',
+                        keyboardType: TextInputType.text,
+                        onChanged: fcubit.setIdentification,
+                        inputWidth: double.infinity,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      DateInput(
+                        onChanged: fcubit.setBirthDate,
+                        label: 'Fecha de Nacimiento',
+                        errorMessage: fcubit.state.status == FormStatus.error && ( fcubit.state.child.birthDate == null || fcubit.state.child.birthDate!.isEmpty )? 'La fecha de nacimiento es requerida': null,
+                        width: double.infinity,
+                        initialValue: fcubit.state.child.birthDate != null
+                            ? DateTime.parse(fcubit.state.child.birthDate!)
+                            : null,
+                      )
+                    ],
+                  ),
+                )
+              )
+            )
+          )
+        ),
         Step(
             isActive: currentStep >= 1,
             title: const Text('Representantes'),

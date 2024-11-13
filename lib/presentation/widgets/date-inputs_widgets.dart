@@ -5,8 +5,10 @@ class DateInput extends StatefulWidget {
   final String label;
   final DateTime? initialValue;
   final double? width;
+  final String? errorMessage;
 
-  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue, this.width});
+
+  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue, this.width, this.errorMessage});
 
   @override
   _DateInputState createState() => _DateInputState();
@@ -37,6 +39,7 @@ class _DateInputState extends State<DateInput> {
           labelStyle: TextStyle(fontSize: 12, color: colors.primary),
           filled: true,
           prefixIcon: const Icon(Icons.calendar_today),
+          errorText: widget.errorMessage,
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide.none,
           ),

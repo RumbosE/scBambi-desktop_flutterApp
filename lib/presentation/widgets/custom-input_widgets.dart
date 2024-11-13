@@ -10,7 +10,6 @@ class CustomInput extends StatefulWidget {
   final double? inputWidth;
   final Function(String)? onChanged;
   final String? initialState;
-  final bool isRequired;
 
 
   const CustomInput({
@@ -23,7 +22,6 @@ class CustomInput extends StatefulWidget {
     this.inputWidth, 
     this.onChanged,
     this.initialState,
-    this.isRequired = false
     });
 
   @override
@@ -62,6 +60,7 @@ class _CustomInputState extends State<CustomInput> {
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
           label: widget.labelText != null ? Text(widget.labelText!) : null,
+          errorText: widget.errorMessage
         ),
       ),
     );
