@@ -1,5 +1,5 @@
 class Child {
-  final String id;
+  final String? id;
   final String? foundationId;
   final String? name;
   final String? lastName;
@@ -9,7 +9,7 @@ class Child {
   final FoundationHistory history;
 
   Child({
-    required this.id,
+    this.id,
     this.foundationId,
     this.name,
     this.lastName,
@@ -20,6 +20,7 @@ class Child {
   });
 
   Child copyWith({
+    String? id,
     String? foundationId,
     String? name,
     String? lastName,
@@ -30,7 +31,7 @@ class Child {
 
   }) {
     return Child(
-      id: id,
+      id: id?? this.id,
       foundationId: foundationId ?? this.foundationId,
       name: name ?? this.name,
       lastName: lastName ?? this.lastName,

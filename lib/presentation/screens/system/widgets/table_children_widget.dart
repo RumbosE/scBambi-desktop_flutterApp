@@ -104,7 +104,7 @@ class _TableChildrenState extends State<_TableChildren> {
                   TableCell(
                       child:Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(child.id),
+                        child: Text(child.id!),
                       )
                   ),
                   TableCell(

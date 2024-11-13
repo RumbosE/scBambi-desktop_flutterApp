@@ -4,8 +4,9 @@ class DateInput extends StatefulWidget {
   final Function(DateTime) onChanged;
   final String label;
   final DateTime? initialValue;
+  final double? width;
 
-  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue});
+  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue, this.width});
 
   @override
   _DateInputState createState() => _DateInputState();
@@ -27,7 +28,7 @@ class _DateInputState extends State<DateInput> {
     final colors = Theme.of(context).colorScheme;
 
     return SizedBox(
-      width: 150,
+      width: widget.width ?? 150,
       height: 40,
       child: TextField(
         controller: _controller,

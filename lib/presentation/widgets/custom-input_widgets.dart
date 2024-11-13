@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomInput extends StatelessWidget {
+class CustomInput extends StatefulWidget {
 
   final Icon? icon;
   final String? hint;
@@ -9,6 +9,8 @@ class CustomInput extends StatelessWidget {
   final String? errorMessage;
   final double? inputWidth;
   final Function(String)? onChanged;
+  final String? initialState;
+  final bool isRequired;
 
 
   const CustomInput({
@@ -20,25 +22,46 @@ class CustomInput extends StatelessWidget {
     this.errorMessage,
     this.inputWidth, 
     this.onChanged,
-
+    this.initialState,
+    this.isRequired = false
     });
 
   @override
+  State<CustomInput> createState() => _CustomInputState();
+}
+
+class _CustomInputState extends State<CustomInput> {
+
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialState);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: (inputWidth != null) ? inputWidth : 200  ,
+      width: (widget.inputWidth != null) ? widget.inputWidth : 200  ,
       child: TextFormField(
-        onChanged: onChanged,
-        keyboardType: keyboardType,
+        controller: _controller,
+        onChanged: widget.onChanged,
+        keyboardType: widget.keyboardType,
         decoration: InputDecoration(
-          hintText: hint,
+          hintText: widget.hint,
           hintStyle: const TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w300),
-          prefixIcon: icon,
+          prefixIcon: widget.icon,
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
-          label: labelText != null ? Text(labelText!) : null,
+          label: widget.labelText != null ? Text(widget.labelText!) : null,
         ),
       ),
     );

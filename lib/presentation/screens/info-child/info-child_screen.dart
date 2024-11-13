@@ -28,8 +28,7 @@ class _ChildView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChildBloc, ChildState>(
       builder: (context, state) {
-        if (state.child.id.isEmpty ||
-            state.status == ChildDetailsStatus.loading) {
+        if (state.status == ChildDetailsStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
