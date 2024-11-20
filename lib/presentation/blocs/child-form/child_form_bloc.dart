@@ -1,16 +1,62 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sc_flutter_app/domain/child/entities/child.dart';
-
+import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
+import 'package:intl/intl.dart';
 part 'child_form_state.dart';
 
-final Child initChild = Child(id: '', responsible: Responsible(), history: FoundationHistory());
+String formatDate(DateTime date) {
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  return formatter.format(date);
+}
+
+
+final Child initChild = Child(responsible: Responsible(names: [],), history: FoundationHistory());
 
 class ChildFormCubit extends Cubit<ChildFormState> {
-  
-  ChildFormCubit(): super(ChildFormState(child:initChild));
 
-  void onSubmitted() {}
+  final IChildRepository repository;
+  
+  ChildFormCubit({required this.repository}): super(ChildFormState(child:initChild));
+
+  Future<void> onSubmitted() async{
+    emit(state.copyWith(status: FormStatus.validating));
+    validatePersonalData();
+    validateFoundationData();
+    if(state.errors != null || state.status == FormStatus.error){
+      return;
+    }
+    emit(state.copyWith(status: FormStatus.submitting));
+    final res = await repository.createUpdateChild(state.child, state.id);
+    res.isSuccessful() ? emit(state.copyWith(status: FormStatus.success)) : emit(state.copyWith(status: FormStatus.error, errors: res.getError().toString()));
+
+    
+  }
+
+  void validateFoundationData(){
+    if(state.child.foundationId == null || state.child.foundationId!.isEmpty){
+      emit(state.copyWith(errors: 'Nro Expediente Requerido', status: FormStatus.error));
+      return;
+    }
+    if(state.child.history.courtId == null || state.child.history.courtId!.isEmpty){
+      emit(state.copyWith(errors: 'Nro Expediente Tribunal Requerido', status: FormStatus.error));
+      return;
+    }
+    if(state.child.history.entryDate.isEmpty){
+      emit(state.copyWith(errors: 'Fecha de Ingreso Requerida', status: FormStatus.error));
+      return;
+    }
+    if(state.child.history.entryReason.isEmpty){
+      emit(state.copyWith(errors: 'Motivo de Ingreso Requerido', status: FormStatus.error));
+      return;
+    }
+    if(state.child.history.organization == null || state.child.history.organization!.isEmpty){
+      emit(state.copyWith(errors: 'Organización Judicial Requerida', status: FormStatus.error));
+      return;
+    }
+    emit(state.copyWith(errors: null, status: FormStatus.valid ));
+    return;
+  }
 
   void validatePersonalData(){
     if(state.child.name == null || state.child.name!.isEmpty){
@@ -21,12 +67,8 @@ class ChildFormCubit extends Cubit<ChildFormState> {
       emit(state.copyWith(errors: 'Apellido Requerido', status: FormStatus.error));
       return;
     }
-    if(state.child.birthDate == null || state.child.birthDate!.isEmpty){
-      emit(state.copyWith(errors: 'Fecha de Nacimiento Requerida', status: FormStatus.error));
-      return;
-    }
-    emit(state.copyWith(errors: null));
-    print(state.child.birthDate);
+    
+    emit(state.copyWith(errors: null, status: FormStatus.valid));
     return;
   }
 
@@ -39,11 +81,105 @@ class ChildFormCubit extends Cubit<ChildFormState> {
       emit(state.copyWith(child: state.child.copyWith(lastName: lastname), status: FormStatus.validating));
   }
 
-  void setBirthDate(DateTime date){
-    emit(state.copyWith(child: state.child.copyWith(birthDate: date.toString()), status: FormStatus.validating));
+  void setBirthCertificate(String text){
+    emit(state.copyWith(child: state.child.copyWith(birthCertificate: text), status: FormStatus.validating));
   }
 
   void setIdentification(String id){
     emit(state.copyWith(child: state.child.copyWith(personalId: id), status: FormStatus.validating));
+  }
+
+  void pushResponsibleName(String name){
+    emit(state.copyWith(child: state.child.copyWith(responsible: state.child.responsible.copyWith(
+      names: state.child.responsible.names == null ? [name] : [...state.child.responsible.names!, name]
+    ))));
+  }
+
+  void popResponsibleName(String name){
+    emit(state.copyWith(child: state.child.copyWith(responsible: state.child.responsible.copyWith(
+      names: state.child.responsible.names == null ? [] : state.child.responsible.names!.where((element) => element != name).toList()
+    ))));
+  }
+
+  void pushResponsibleDoc(String doc){
+    emit(state.copyWith(child: state.child.copyWith(responsible: state.child.responsible.copyWith(
+      docsId: state.child.responsible.docsId == null ? [doc] : [...state.child.responsible.docsId!, doc]
+    ))));
+  }
+
+  void popResponsibleDoc(String doc){
+    emit(state.copyWith(child: state.child.copyWith(responsible: state.child.responsible.copyWith(
+      docsId: state.child.responsible.docsId == null ? [] : state.child.responsible.docsId!.where((element) => element != doc).toList()
+    ))));
+  }
+
+  void pushResponsibleContact(String contact){
+    emit(state.copyWith(child: state.child.copyWith(responsible: state.child.responsible.copyWith(
+      contactNro: state.child.responsible.contactNro == null ? [contact] : [...state.child.responsible.docsId!, contact]
+    ))));
+  }
+
+  void popResponsibleContact(String contactNro){
+    emit(state.copyWith(child: state.child.copyWith(responsible: state.child.responsible.copyWith(
+      contactNro: state.child.responsible.contactNro == null ? [] : state.child.responsible.docsId!.where((element) => element != contactNro).toList()
+    ))));
+  }
+
+  void setFoundationId(String id){
+    emit(state.copyWith(child: state.child.copyWith(foundationId: id)));
+  }
+  
+  void setFoundationCorteId(String id){
+    emit(state.copyWith(child: state.child.copyWith(
+      history: state.child.history.copyWith(courtId: id)
+    )));
+  }
+
+  void pushFoundationEntryDate(DateTime date){
+    emit(state.copyWith(child: state.child.copyWith(history: state.child.history.copyWith(
+      entryDate: [...state.child.history.entryDate, formatDate(date)]
+    ))));
+  }
+
+  void popFoundationEntryDate(String date){
+    emit(state.copyWith(child: state.child.copyWith(history: state.child.history.copyWith(
+      entryDate: state.child.history.entryDate.where((element) => element != date).toList()
+    ))));
+  }
+
+  void pushFoundationDepartureDate(DateTime date){
+    emit(state.copyWith(child: state.child.copyWith(history: state.child.history.copyWith(
+      departureDate: [...state.child.history.departureDate, formatDate(date)]
+    ))));
+  }
+
+  void popFoundationDepartureDate(String date){
+    emit(state.copyWith(child: state.child.copyWith(history: state.child.history.copyWith(
+      departureDate: state.child.history.departureDate.where((element) => element != date).toList()
+    ))));
+  }
+
+  void pushEntryReason(String reason){
+    emit(state.copyWith(child: state.child.copyWith(history: state.child.history.copyWith(
+      entryReason: [...state.child.history.entryReason, reason]
+    ))));
+  }
+
+  void popEntryReason(String reason){
+    emit(state.copyWith(child: state.child.copyWith(history: state.child.history.copyWith(
+      entryReason: state.child.history.entryReason.where((element) => element != reason).toList()
+    ))));
+  }
+  
+  void setFoundationDepartureReason(String reason){
+    emit(state.copyWith(child: state.child.copyWith(
+      history: state.child.history.copyWith(departureReason: reason)
+    )));
+  }
+
+  void setFoundationOrganization(String organization){
+    emit(state.copyWith(child: state.child.copyWith(
+      history: state.child.history.copyWith(organization: organization)
+    )));
   }
 }

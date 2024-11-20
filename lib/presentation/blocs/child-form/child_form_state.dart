@@ -1,6 +1,6 @@
 part of 'child_form_bloc.dart';
 
-enum FormStatus{ valid, error, initial, validating}
+enum FormStatus{ valid, error, initial, validating, submitting, success}
 
 class ChildFormState extends Equatable {
 
@@ -23,7 +23,7 @@ class ChildFormState extends Equatable {
     id: id ?? this.id,
     status: status ?? this.status,
     child: child ?? this.child,
-    errors: errors ?? this.errors
+    errors: errors ?? this.errors,
   );}
 
 

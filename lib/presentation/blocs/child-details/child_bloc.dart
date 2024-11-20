@@ -6,12 +6,12 @@ import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
 part 'child_event.dart';
 part 'child_state.dart';
 
-final initialState = Child(id: '',name: '', lastName: '',foundationId: '', personalId: '', birthDate: '', history: FoundationHistory(), responsible: Responsible());
+final initialState = Child(id: '',name: '', lastName: '',foundationId: '', personalId: '', birthCertificate: '', history: FoundationHistory(), responsible: Responsible());
 
 
 class ChildBloc extends Bloc<ChildEvent, ChildState> {
 
-  final ChildRepository childRepository;
+  final IChildRepository childRepository;
 
   ChildBloc(this.childRepository) 
     : super(ChildState(child: initialState)) {

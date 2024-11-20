@@ -11,7 +11,7 @@ part 'child_bloc_state.dart';
 
 class ChildrenBlocBloc extends SafeBloc<ChildrenBlocEvent, ChildrenBlocState> {
 
-  final ChildRepository childRepository;
+  final IChildRepository childRepository;
 
   ChildrenBlocBloc(this.childRepository) : super(const ChildrenBlocState()) {
 
@@ -25,14 +25,17 @@ class ChildrenBlocBloc extends SafeBloc<ChildrenBlocEvent, ChildrenBlocState> {
 
     on<RefreshChildren>(_onRefreshChildren);
 
+    on<FilterSetChildren>(onFilterSetChildren);
+
+    on<PageChanged>(onPageChanged);
+
   }
 
   void _onChildrenLoaded(ChildrenLoaded event, Emitter<ChildrenBlocState> emit) {
     emit(
         state.copyWith(
-          children: [...state.children, ...event.children],
+          children: [...event.children],
           status: ChildrenStatus.loaded,
-          page: state.page + 1
         )
       );
   }
@@ -40,7 +43,6 @@ class ChildrenBlocBloc extends SafeBloc<ChildrenBlocEvent, ChildrenBlocState> {
   void _onLoadingStarted(LoadingStarted event, Emitter<ChildrenBlocState> emit) {
     emit(state.copyWith(status: ChildrenStatus.loading));
   }
-
 
 
   FutureOr<void> _onErrorOnChildrenLoading(ErrorOnChildrenLoading event, Emitter<ChildrenBlocState> emit) {
@@ -53,28 +55,50 @@ class ChildrenBlocBloc extends SafeBloc<ChildrenBlocEvent, ChildrenBlocState> {
 
   FutureOr<void> _onRefreshChildren(RefreshChildren event, Emitter<ChildrenBlocState> emit) {
     emit(const ChildrenBlocState());
-    loadNextPage();
+    fetchChildrenPaginated();
+  }
+
+  FutureOr<void> onFilterSetChildren(FilterSetChildren event, Emitter<ChildrenBlocState> emit) {
+    emit(state.copyWith(filter: event.filter, children: [], page: 0, status: ChildrenStatus.initial));
+    fetchChildrenPaginated();
+  }
+
+  FutureOr<void> onPageChanged(PageChanged event, Emitter<ChildrenBlocState> emit) {
+    emit(state.copyWith(page: event.page, children: []));
+    fetchChildrenPaginated();
+  }
+
+  void setFilter(String filter) {
+    add(FilterSetChildren(filter: filter));
+  }
+
+  void setPage(int pag) {
+    add(PageChanged(page: pag));
   }
   
-  Future<void> loadNextPage() async {
-
+  Future<void> fetchChildrenPaginated() async {
     if (state.status == ChildrenStatus.loading ||
-        state.status == ChildrenStatus.allChildrenLoaded) return;
+    state.filter == '' || 
+    state.status == ChildrenStatus.error) return;
+
     add(LoadingStarted());
-
-    final res = await childRepository.getChildren();
-
-    if (res.isSuccessful()) {
-      final children = res.getValue();
-      if (children.isNotEmpty) {
-        add(ChildrenLoaded(children: children));
-        return;
-      }
-      add(AllChildrenLoaded());
-      return;
-    }
     
-    add(ErrorOnChildrenLoading());
-  }
+    final res = await childRepository.getChildren(
+      state.filter, 
+      state.page, 
+      state.perPage
+    );
+
+    if (res.isSuccessful()){
+      final children = res.getValue();
+      if (children.isEmpty){
+        add(AllChildrenLoaded());
+      } else {
+        add(ChildrenLoaded(children: children));
+      }
+    }else {
+      add(ErrorOnChildrenLoading());
+    }
   
+  }
 }

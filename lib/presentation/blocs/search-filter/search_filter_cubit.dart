@@ -1,32 +1,33 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
 
 part 'search_filter_state.dart';
 
 class SearchFilterCubit extends Cubit<SearchFilterState> {
-  SearchFilterCubit() : super(SearchFilterState());
 
-  void onSubmitted() {
-    print('State: $state');
+  final ChildrenBlocBloc childrenBloc;
+
+  SearchFilterCubit(this.childrenBloc) : super(const SearchFilterState());
+
+  void onSubmitted() async{
+    if (state.filter.isEmpty || state.status == FilterStatus.loading) return;
+
+    emit(state.copyWith(status: FilterStatus.loading));
+    childrenBloc.setFilter(state.filter);
+    emit(state.copyWith(status: FilterStatus.loaded));
   }
 
-  void setName(String name) {
-    emit(state.copyWith(name: name));
+  void setFilterParam(String filter) {
+    emit(state.copyWith(filter: filter, status: FilterStatus.loaded));
   }
 
-  void setStartDate(DateTime startDate) {
-    emit(state.copyWith(startDate: startDate));
+  void setPage(int page) {
+    childrenBloc.setPage(page);
   }
 
-  void setEndDate(DateTime endDate) {
-    emit(state.copyWith(endDate: endDate));
-  }
-
-  void setNroExp(String nroExp) {
-    emit(state.copyWith(nroExp: nroExp));
-  }
 
   void clear() {
-    emit( SearchFilterState());
+    emit(const SearchFilterState());
   }
 }

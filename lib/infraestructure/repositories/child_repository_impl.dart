@@ -6,22 +6,33 @@ import 'package:sc_flutter_app/domain/child/entities/child.dart';
 import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
 import 'package:sc_flutter_app/infraestructure/datasources/api_child_datasource_dart.dart';
 
-class ChildRepositoryImpl extends ChildRepository {
+class ChildRepositoryImpl extends IChildRepository {
 
   final ApiChildDatasourceImpl childDatasource;
 
   ChildRepositoryImpl({required this.childDatasource});
 
   @override
-  Future<Result<void>> createUpdateChild(Child child) {
-    // TODO: implement createUpdateChild
-    throw UnimplementedError();
+  Future<Result<bool>> createUpdateChild(Child child, String? id) async {
+      
+      try {
+      await childDatasource.createUpdateChild(child, id);
+      return Result<bool>.success(true);
+    } catch (e) {
+      return Result<bool>.fail(Exception(e.toString()));
+    }
   }
 
   @override
-  Future<Result<void>> deleteChild(String id) {
-    // TODO: implement deleteChild
-    throw UnimplementedError();
+  Future<Result<bool>> deleteChild(String id) async {
+    print('Paso por el repositorio');
+    try {
+      await childDatasource.deleteChild(id);
+      return Result<bool>.success(true);
+    } catch(e) {
+      print(e);
+      return Result<bool>.fail(Exception(e.toString()));
+    }
   }
 
   @override
@@ -32,21 +43,21 @@ class ChildRepositoryImpl extends ChildRepository {
 
       return Result<Child>.success(child);
 
-    } catch(error, _) {
-      return Result<Child>.fail(error as Exception);
+    } catch(e) {
+      return Result<Child>.fail(Exception(e.toString()));
     }
   }
 
   @override
-  Future<Result<List<Child>>> getChildren() async {
+  Future<Result<List<Child>>> getChildren(String param, int page, int perPage) async {
 
     try {
-      final children = await childDatasource.getChildren();
+      final children = await childDatasource.getChildren(param, page, perPage);
 
       return Result<List<Child>>.success(children);
 
-    } catch(error, _) {
-      return Result<List<Child>>.fail(error as Exception);
+    } catch(e) {
+      return Result<List<Child>>.fail(Exception('Failed to fetch children: ${e.toString()}'));
     }
 
   }

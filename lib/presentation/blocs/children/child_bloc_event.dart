@@ -11,6 +11,16 @@ class ChildrenLoaded extends ChildrenBlocEvent {
   
 }
 
+class FilterSetChildren extends ChildrenBlocEvent {
+  final String filter;
+  const FilterSetChildren({required this.filter});
+}
+
+class PageChanged extends ChildrenBlocEvent {
+  final int page;
+  const PageChanged({required this.page});
+}
+
 class AllChildrenLoaded extends ChildrenBlocEvent {}
 
 class LoadingStarted extends ChildrenBlocEvent {}

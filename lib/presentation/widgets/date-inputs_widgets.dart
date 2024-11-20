@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 
 class DateInput extends StatefulWidget {
   final Function(DateTime) onChanged;
@@ -6,9 +8,10 @@ class DateInput extends StatefulWidget {
   final DateTime? initialValue;
   final double? width;
   final String? errorMessage;
+  final bool clearInput;
 
 
-  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue, this.width, this.errorMessage});
+  const DateInput({super.key, required this.onChanged, required this.label, this.initialValue, this.width, this.errorMessage, this.clearInput = false});
 
   @override
   _DateInputState createState() => _DateInputState();
@@ -23,6 +26,11 @@ class _DateInputState extends State<DateInput> {
     _controller = TextEditingController(
       text: widget.initialValue != null ? _formatDate(widget.initialValue!) : '',
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(date);
   }
 
   @override
@@ -62,13 +70,13 @@ class _DateInputState extends State<DateInput> {
     );
     if (picked != null) {
       setState(() {
-        _controller.text = _formatDate(picked);
+        _controller.text = DateFormat('yyyy-MM-dd').format(picked);
       });
       widget.onChanged(picked);
-    }
-  }
 
-  String _formatDate(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      if (widget.clearInput) {
+        _controller.clear();
+      }
+    }
   }
 }

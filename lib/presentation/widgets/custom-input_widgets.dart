@@ -10,6 +10,7 @@ class CustomInput extends StatefulWidget {
   final double? inputWidth;
   final Function(String)? onChanged;
   final String? initialState;
+  final int? maxLines;
 
 
   const CustomInput({
@@ -22,6 +23,7 @@ class CustomInput extends StatefulWidget {
     this.inputWidth, 
     this.onChanged,
     this.initialState,
+    this.maxLines = 1
     });
 
   @override
@@ -51,6 +53,8 @@ class _CustomInputState extends State<CustomInput> {
       child: TextFormField(
         controller: _controller,
         onChanged: widget.onChanged,
+        minLines: 1,
+        maxLines: widget.maxLines== 1 ? 1 : null,
         keyboardType: widget.keyboardType,
         decoration: InputDecoration(
           hintText: widget.hint,

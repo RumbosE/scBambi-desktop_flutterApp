@@ -1,37 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sc_flutter_app/injector.dart';
 import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
 import 'package:sc_flutter_app/presentation/screens/system/widgets/system_widgets.dart';
 import 'package:sc_flutter_app/presentation/widgets/custom-input_widgets.dart';
 import 'package:sc_flutter_app/presentation/widgets/date-inputs_widgets.dart';
 
-class SystemScreen extends StatefulWidget {
+class SystemScreen extends StatelessWidget {
   static const String name = 'system_screen';
 
   const SystemScreen({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _SystemScreenState createState() => _SystemScreenState();
-}
-
-class _SystemScreenState extends State<SystemScreen> {
-  int _currentPage = 1;
-
-  void _previousPage() {
-    setState(() {
-      if (_currentPage > 1) {
-        _currentPage--;
-      }
-    });
-  }
-
-  void _nextPage() {
-    setState(() {
-      _currentPage++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,30 +29,13 @@ class _SystemScreenState extends State<SystemScreen> {
           children: [
             const SizedBox(height: 20),
             BlocProvider(
-              create: (context) => SearchFilterCubit(),
-              child: const _FiltersContainer(),
+              create: (context) => getIt<SearchFilterCubit>(),
+              child: _FiltersContainer(),
             ),
             const SizedBox(height: 20),
 
             const TableChildren(),
             const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _previousPage,
-                  child: const Text('Anterior'),
-                ),
-                const SizedBox(width: 10),
-                Text('Página $_currentPage'),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _nextPage,
-                  child: const Text('Siguiente'),
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -88,52 +50,19 @@ class _SystemScreenState extends State<SystemScreen> {
 }
 
 class _FiltersContainer extends StatelessWidget {
-  const _FiltersContainer();
 
   @override
   Widget build(BuildContext context) {
+
     final filterCubit = context.watch<SearchFilterCubit>();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text('Filtrar por:'),
-              const SizedBox(width: 10),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text('Periodo de tiempo'),
-                    const SizedBox(width: 5), // Espacio reducido entre los botones
-                    DateInput(
-                      initialValue: filterCubit.state.startDate,
-                      onChanged: filterCubit.setStartDate,
-                      label: 'Desde',
-                    ),
-                    const SizedBox(width: 5),
-                    DateInput(
-                      initialValue: filterCubit.state.endDate,
-                      onChanged: filterCubit.setEndDate,
-                      label: 'Hasta',
-                    ),
-                  ],
-                ),
-              const SizedBox(width: 10),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // ignore: avoid_print
-                  filterCubit.onSubmitted();
-                  print('Filtrar');
-                },
-                icon: const Icon(Icons.filter_list),
-                label: const Text('Filtrar'),
-              ),
-            ],
-          ),
-        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Text('Busqueda por filtros', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor))),
+      
         const SizedBox(height: 20),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -144,21 +73,14 @@ class _FiltersContainer extends StatelessWidget {
                 children: [
                   CustomInput(
                     icon: const Icon(Icons.boy),
-                    hint: 'Nombre',
-                    labelText: 'Buscar por nombre',
+                    hint: 'Nombre Apellido o Nro Expediente',
+                    labelText: 'Buscar por Nombre, Apellido o Nro Expediente',
                     keyboardType: TextInputType.text,
-                    inputWidth: 400,
-                    onChanged: (value) => filterCubit.setName(value),
+                    inputWidth: MediaQuery.of(context).size.width * 0.5,
+                    onChanged: filterCubit.setFilterParam,
                   ),
-                  const SizedBox(width: 10),
-                  CustomInput(
-                    icon: const Icon(Icons.menu_book_outlined),
-                    hint: 'Nro - Expediente',
-                    labelText: 'Buscar por Nro Expediente',
-                    keyboardType: TextInputType.text,
-                    inputWidth: 400,
-                    onChanged: (value) => filterCubit.setNroExp(value),
-                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(onPressed: filterCubit.onSubmitted, label: const Text('Buscar'), icon: const Icon(Icons.search)),
                 ],
               ),
             ),

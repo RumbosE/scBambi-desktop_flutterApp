@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:sc_flutter_app/config/router/app_router.dart';
 import 'package:sc_flutter_app/config/theme/app_theme.dart';
-//import 'package:sc_flutter_app/infraestructure/core/enviroments.dart';
+import 'package:sc_flutter_app/infraestructure/core/enviroments.dart';
 import 'package:sc_flutter_app/injector.dart';
 
 
 void main() async {
 
-  // await Environment.initEnvironment();
+  await Environment.initEnvironment();
 
   // Register Blocs in service locator
   Injector().setUp();

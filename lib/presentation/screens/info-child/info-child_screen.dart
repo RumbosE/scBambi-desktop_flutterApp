@@ -36,7 +36,7 @@ class _ChildView extends StatelessWidget {
 
         if (state.status == ChildDetailsStatus.error) {
           return const Center(
-            child: Text('Blog Not found'),
+            child: Text('Id del niño no encontrado'),
           );
         }
 
@@ -103,7 +103,7 @@ class _ChildDetailsView extends StatelessWidget {
                       const SizedBox(height: 8,),
                       ItemInfoChild(title: 'Identificacion', value: child.personalId),
                       const SizedBox(height: 8,),
-                      ItemInfoChild(title: 'Fecha de Nacimiento', value: child.birthDate),
+                      ItemInfoChild(title: 'Fecha de Nacimiento', value: child.birthCertificate),
 
 
                       const SizedBox(height: 24,),
@@ -120,15 +120,15 @@ class _ChildDetailsView extends StatelessWidget {
 
                       const SizedBox(height: 24,),
                       const HeaderInfo(title: 'Datos Fundacionales'),
-                      ItemInfoChild(title: 'COD Corte', value: child.history.courtId),
+                      ItemInfoChild(title: 'Nro. Expediente Interno', value: child.foundationId),
                       const SizedBox(height: 8,),
-                      ItemInfoChild(title: 'Fecha de Ingreso', value: child.history.entryDate),
+                      ItemInfoChild(title: 'Nro. Expediente Tribunal', value: child.history.courtId),
+                      const SizedBox(height: 8,),
+                      ItemInfoChild(title: 'Fecha de Ingreso', value: child.history.entryDate.toString()),
                       const SizedBox(height: 16,),
-                      _ListItemWidget (title: 'Motivo(s) Ingreso', items: child.history.entryReason ?? []),
+                      _ListItemWidget (title: 'Motivo(s) Ingreso', items: child.history.entryReason),
                       const SizedBox(height: 8,),
-                      ItemInfoChild(title: 'Fecha de Reingreso', value: child.history.reentryDate),
-                      const SizedBox(height: 8,),
-                      ItemInfoChild(title: 'Fecha de Salida', value: child.history.departureDate),
+                      ItemInfoChild(title: 'Fecha de Salida', value: child.history.departureDate.toString()),
                       const SizedBox(height: 8,),
                       ItemInfoChild(title: 'Motivo Salida', value: child.history.departureReason),
                       const SizedBox(height: 8,),
