@@ -9,7 +9,9 @@ import 'package:sc_flutter_app/presentation/widgets/widgets.dart';
 class FormChildScreen extends StatefulWidget {
   static const String name = 'form_child_screen';
 
-  const FormChildScreen({super.key});
+  final String? id;
+
+  const FormChildScreen({super.key, this.id});
 
   @override
   State<FormChildScreen> createState() => _FormChildScreenState();
@@ -21,16 +23,14 @@ class _FormChildScreenState extends State<FormChildScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<ChildFormCubit>(),
+      create: (context) => getIt<ChildFormCubit>()..init(widget.id),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Formulario'),
+          title: Text(widget.id != null ? 'Formulario para Editar' : 'Formulario para Ingresar'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
             color: Colors.white,
-            onPressed: () {
-              context.pop();
-            },
+            onPressed: () => context.go('/system'),
           ),
         ),
         body: Padding(
@@ -56,7 +56,11 @@ class _FormChildScreenState extends State<FormChildScreen> {
             },
             child: BlocBuilder<ChildFormCubit, ChildFormState>(
               builder: (context, state) {
-                final formCubit = context.watch<ChildFormCubit>();
+                if(state.status == FormStatus.loading){
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+              final formCubit = context.watch<ChildFormCubit>();
 
                 return Stepper(
                     type: StepperType.horizontal,
@@ -88,7 +92,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       if (isLastStep) {
                         await formCubit.onSubmitted();
                         if (formCubit.state.status == FormStatus.success) {
-                          context.pop();
+                          context.go('/system/info/${formCubit.state.id}');
                         }
                         return;
                       }
@@ -167,6 +171,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   CustomInput(
                     labelText: 'Identificación',
                     keyboardType: TextInputType.text,
+                    initialState: fcubit.state.child.personalId,
                     onChanged: fcubit.setIdentification,
                     inputWidth: double.infinity,
                   ),
@@ -175,6 +180,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   ),
                   CustomInput(
                     labelText: 'Certificado de Nacimiento',
+                    initialState: fcubit.state.child.birthCertificate,
                     keyboardType: TextInputType.text,
                     onChanged: fcubit.setBirthCertificate,
                     inputWidth: double.infinity,
@@ -303,6 +309,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   Expanded(
                     child: CustomInput(
                       labelText: 'Motivo de Salida',
+                      initialState: fcubit.state.child.history.departureReason,
                       keyboardType: TextInputType.text,
                       onChanged: fcubit.setFoundationDepartureReason,
                       inputWidth: double.infinity,
@@ -315,7 +322,6 @@ class _FormChildScreenState extends State<FormChildScreen> {
                 CustomInput(
                   hint: 'Escribe sobre la organización judicial del niño',
                   labelText: 'Organización Judicial*',
-                  
                   keyboardType: TextInputType.text,
                   onChanged: fcubit.setFoundationOrganization,
                   maxLines: 2,
@@ -470,7 +476,7 @@ class _CustomInputDateList extends StatelessWidget {
   final List<String> items;
   final String? errorMessage;
   
-  _CustomInputDateList({required this.label, required this.onAdded, required this.onDeleted, required this.items, this.errorMessage});
+  const _CustomInputDateList({required this.label, required this.onAdded, required this.onDeleted, required this.items, this.errorMessage});
 
   @override
   Widget build(BuildContext context) {

@@ -11,10 +11,12 @@ class ApiChildDatasourceImpl extends ChildDatasource {
   @override
   Future<void> createUpdateChild(Child child, String? id) async {
 
+    final c=child.toJson();
+
     if (id == null) {
-      await dio.post('/', data: child.toJson());
+      await dio.post('/', data: c);
     } else {
-      await dio.put('/$id', data: child.toJson());
+      await dio.put('/$id/', data: c);
     }
   }
 

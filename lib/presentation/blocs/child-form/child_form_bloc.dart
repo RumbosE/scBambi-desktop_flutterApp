@@ -19,6 +19,10 @@ class ChildFormCubit extends Cubit<ChildFormState> {
   
   ChildFormCubit({required this.repository}): super(ChildFormState(child:initChild));
 
+  void setSnakBarShown(bool shown){
+    emit(state.copyWith(snackBarShown: shown));
+  }
+
   Future<void> onSubmitted() async{
     emit(state.copyWith(status: FormStatus.validating));
     validatePersonalData();
@@ -31,6 +35,15 @@ class ChildFormCubit extends Cubit<ChildFormState> {
     res.isSuccessful() ? emit(state.copyWith(status: FormStatus.success)) : emit(state.copyWith(status: FormStatus.error, errors: res.getError().toString()));
 
     
+  }
+
+  Future<void> init(String? id) async{
+    
+    if(id != null && id.isNotEmpty){
+      emit(state.copyWith(status: FormStatus.loading));
+      final res = await repository.getChild(id);
+      res.isSuccessful() ? emit(state.copyWith(child: res.getValue(), id: id, status: FormStatus.initial)) : emit(state.copyWith(errors: res.getError().toString(), status: FormStatus.error));
+    }
   }
 
   void validateFoundationData(){

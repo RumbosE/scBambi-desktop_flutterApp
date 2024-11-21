@@ -22,7 +22,16 @@ final appRouter = GoRouter(
       ),
 
     GoRoute(
-      path: '/system/add',
+      path: '/system/edit/:id',
+      name: 'edit',
+      builder: (context, state) {
+        final id = state.pathParameters['id']?? '';
+        return FormChildScreen(id: id);
+      },
+    ),
+
+    GoRoute(
+      path: '/system/form',
       name: FormChildScreen.name,
       builder: (context, state) => const FormChildScreen(),
     ),

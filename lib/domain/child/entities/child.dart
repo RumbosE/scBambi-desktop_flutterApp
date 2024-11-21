@@ -73,7 +73,7 @@ class Child {
         entryDate: (json['record']['bambi_entry_dates'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
         entryReason: (json['record']['bambi_entry_reasons'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
         departureDate: (json['record']['bambi_departure_date'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-        departureReason: json['record']['bambi_departure_reason'] as String?,
+        departureReason: (json['record']['bambi_departure_reason']).toString(),
         organization: json['record']['justice_organization'] as String?,
       ),
     );
@@ -89,7 +89,7 @@ class Child {
         "record_bambi_entry_date": List<String>.from(history.entryDate.map((x) => x)),
         "record_bambi_entry_reasons": List<String>.from(history.entryReason.map((x) => x)),
         "record_bambi_departure_date": List<String>.from(history.departureDate.map((x) => x)),
-        "record_bambi_departure_reason": List<String>.from(history.departureDate),
+        "record_bambi_departure_reason": history.departureReason?.split(',') ?? [],
         "record_justice_organization": history.organization,
         "responsible_names": List<String>.from(responsible.names?.map((x) => x) ?? []),
         "responsible_identification": List<String>.from(responsible.docsId?.map((x) => x) ?? []),

@@ -12,16 +12,24 @@ dependencies:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  intl: ^0.17.0
   flutter_bloc: ^8.1.6
-  get_it: ^8.0.1
+  get_it: 7.7.0
   go_router: ^14.2.8
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_dotenv: ^5.2.1
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
+
+  msix: 2.8.18
+msix_config:
+  displayName: "Socio-legal DesktopApp"
+  identityName: "SCSocioLegalApp"
+  publisherDisplayName: "SC-UCAB"
+  msix_version: 1.0.0.0  
+
 
 flutter:
   uses-material-design: true

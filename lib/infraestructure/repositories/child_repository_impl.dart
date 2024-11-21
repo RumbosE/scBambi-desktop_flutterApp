@@ -19,19 +19,18 @@ class ChildRepositoryImpl extends IChildRepository {
       await childDatasource.createUpdateChild(child, id);
       return Result<bool>.success(true);
     } catch (e) {
-      return Result<bool>.fail(Exception(e.toString()));
+        print('error en el repositorio: $e');
+      return Result<bool>.fail(Exception('Failed on update: ${e.toString()}'));
     }
   }
 
   @override
   Future<Result<bool>> deleteChild(String id) async {
-    print('Paso por el repositorio');
     try {
       await childDatasource.deleteChild(id);
       return Result<bool>.success(true);
     } catch(e) {
-      print(e);
-      return Result<bool>.fail(Exception(e.toString()));
+      return Result<bool>.fail(Exception('Failed on delete child: ${e.toString()}'));
     }
   }
 
@@ -44,7 +43,7 @@ class ChildRepositoryImpl extends IChildRepository {
       return Result<Child>.success(child);
 
     } catch(e) {
-      return Result<Child>.fail(Exception(e.toString()));
+      return Result<Child>.fail(Exception('Failed to fetch child: ${e.toString()}'));
     }
   }
 

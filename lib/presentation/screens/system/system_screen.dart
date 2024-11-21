@@ -5,7 +5,6 @@ import 'package:sc_flutter_app/injector.dart';
 import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
 import 'package:sc_flutter_app/presentation/screens/system/widgets/system_widgets.dart';
 import 'package:sc_flutter_app/presentation/widgets/custom-input_widgets.dart';
-import 'package:sc_flutter_app/presentation/widgets/date-inputs_widgets.dart';
 
 class SystemScreen extends StatelessWidget {
   static const String name = 'system_screen';
@@ -21,7 +20,7 @@ class SystemScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back_rounded),
             color: Colors.white,
             onPressed: () {
-              context.pop();
+              context.go('/');
             }),
       ),
       body: SingleChildScrollView(
@@ -42,9 +41,8 @@ class SystemScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
           icon: const Icon(Icons.add),
           label: const Text('Agregar al sistema'),
-          onPressed: () {
-            context.push('/system/add');
-          }),
+          onPressed: () => context.go('/system/form'),
+      ),
     );
   }
 }

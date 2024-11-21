@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sc_flutter_app/domain/child/entities/child.dart';
 import 'package:sc_flutter_app/injector.dart';
 import 'package:sc_flutter_app/presentation/blocs/child-details/child_bloc.dart';
@@ -35,8 +36,16 @@ class _ChildView extends StatelessWidget {
         }
 
         if (state.status == ChildDetailsStatus.error) {
-          return const Center(
-            child: Text('Id del niño no encontrado'),
+          return Center(
+
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, color: Colors.red, size: 50,),
+                const Text('Error al cargar la información'),
+                IconButton(onPressed: () => context.go('/system'), icon: const Icon(Icons.arrow_back_rounded)),
+              ],
+            ),
           );
         }
 
@@ -45,23 +54,18 @@ class _ChildView extends StatelessWidget {
             backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => context.go('/system'),
             ),
             title: const Text('Información',
                 style: TextStyle(
                     color: Colors.black54, fontWeight: FontWeight.w400)),
-            actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
-            ],
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32.0),
             child: _ChildDetailsView(state.child),
           ),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {},
+            onPressed: () =>context.go('/system/edit/${state.child.id}'),
             icon: const Icon(Icons.edit),
             label: const Text('Editar'),
           ),
