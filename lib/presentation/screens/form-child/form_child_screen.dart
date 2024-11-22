@@ -33,7 +33,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
             color: Colors.white,
             onPressed: () {
               context.read<SearchFilterCubit>().reset();
-              context.go('/system');
+              context.pop();
             },
           ),
         ),
@@ -106,10 +106,9 @@ class _FormChildScreenState extends State<FormChildScreen> {
                         if (formCubit.state.status == FormStatus.success) {
                           // widget.id != null ? context.go('/system/info/${widget.id}') : context.go('/system');
                           if(widget.id != null){
-                            context.go('/system/info/${widget.id}');
+                            context.push('/system/info/${widget.id}');
                           }else{
-                             context.read<SearchFilterCubit>().reset();
-                            context.go('/system');
+                            context.push('/system');
                           }
                         }
                         return;

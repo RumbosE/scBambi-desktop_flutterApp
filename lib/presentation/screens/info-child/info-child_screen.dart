@@ -65,8 +65,8 @@ class _ChildView extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
               onPressed: () {
-                context.read<SearchFilterCubit>().reset();
-                context.go('/system');},
+                context.pop();
+              },
             ),
             title: const Text('Información',
                 style: TextStyle(
@@ -77,7 +77,7 @@ class _ChildView extends StatelessWidget {
             child: _ChildDetailsView(state.child),
           ),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () =>context.go('/system/edit/${state.child.id}'),
+            onPressed: () =>context.push('/system/edit/${state.child.id}'),
             icon: const Icon(Icons.edit),
             label: const Text('Editar'),
           ),

@@ -1,10 +1,8 @@
-
-
-
 import 'package:sc_flutter_app/common/result.dart';
 import 'package:sc_flutter_app/domain/child/entities/child.dart';
 import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
 import 'package:sc_flutter_app/infraestructure/datasources/api_child_datasource_dart.dart';
+import 'package:dio/dio.dart';
 
 class ChildRepositoryImpl extends IChildRepository {
 
@@ -18,6 +16,9 @@ class ChildRepositoryImpl extends IChildRepository {
       try {
       await childDatasource.createUpdateChild(child, id);
       return Result<bool>.success(true);
+    } on DioException catch (dioError) {
+      print('Dio error en el repositorio: $dioError');
+      return Result<bool>.fail(Exception('Dio error on update: ${dioError.message}'));
     } catch (e,s) {
       print('error en el repositorio: $e , $s');
       return Result<bool>.fail(Exception('Failed on update: ${e.toString()}'));
@@ -29,6 +30,9 @@ class ChildRepositoryImpl extends IChildRepository {
     try {
       await childDatasource.deleteChild(id);
       return Result<bool>.success(true);
+    } on DioException catch (dioError) {
+      print('Dio error en el repositorio: $dioError');
+      return Result<bool>.fail(Exception('Dio error on delete child: ${dioError.message}'));
     } catch(e) {
       return Result<bool>.fail(Exception('Failed on delete child: ${e.toString()}'));
     }
@@ -42,6 +46,9 @@ class ChildRepositoryImpl extends IChildRepository {
 
       return Result<Child>.success(child);
 
+    } on DioException catch (dioError) {
+      print('Dio error en el repositorio: $dioError');
+      return Result<Child>.fail(Exception('Dio error to fetch child: ${dioError.message}'));
     } catch(e) {
       return Result<Child>.fail(Exception('Failed to fetch child: ${e.toString()}'));
     }
@@ -55,6 +62,9 @@ class ChildRepositoryImpl extends IChildRepository {
 
       return Result<List<Child>>.success(children);
 
+    } on DioException catch (dioError) {
+      print('Dio error en el repositorio: $dioError');
+      return Result<List<Child>>.fail(Exception('Dio error to fetch children: ${dioError.message}'));
     } catch(e) {
       return Result<List<Child>>.fail(Exception('Failed to fetch children: ${e.toString()}'));
     }

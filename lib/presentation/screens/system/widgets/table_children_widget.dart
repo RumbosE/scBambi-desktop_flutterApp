@@ -22,199 +22,189 @@ class _TableChildrenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<ChildrenBlocBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => getIt<DeleteChildBloc>(),
-        ),
-      ],
-      child: Builder(
-        builder: (context) => MultiBlocListener(
-          listeners: [
-            BlocListener<ChildrenBlocBloc, ChildrenBlocState>(
-              listener: (context, state) {
-                if (state.status == ChildrenStatus.error) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      const SnackBar(
-                        content: Text('Algo inesperado paso, verifica tu conexión a internet'),
-                      ),
-                    );
-                }
-              },
-            ),
-            BlocListener<DeleteChildBloc, DeleteChildState>(
-              listener: (context, state) {
-                if (state.status == DeleteStatus.error && !state.snackBarShown) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content: Text('Algo inesperado paso: //${state.error}'),
-                      ),
-                    );
-                  context.read<DeleteChildBloc>().add(SnackBarShown());
-                }
-                if (state.status == DeleteStatus.success && state.snackBarShown == false) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      const SnackBar(
-                        content: Text('Elemento eliminado con éxito'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  context.read<DeleteChildBloc>().add(SnackBarShown());
-                }
-              },
-            ),
-          ],
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: BlocBuilder<ChildrenBlocBloc, ChildrenBlocState>(
-                  builder: (context, state) {
-                if (state.status == ChildrenStatus.loading &&
-                    state.children.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-        
-                if (state.status == ChildrenStatus.error) {
-                  return const Center(
-                    child: Text('Algo inesperado paso'),
-                  );
-                }
-        
-                if (state.children.isEmpty && state.page != 0) {
-                  return Center(
-                      child: Column(
-                    children: [
-                      buttonsPag(context.read<ChildrenBlocBloc>()),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      const Text('Nada en esta pagina, vuelve a la anterior')
-                    ],
-                  ));
-                }
-        
-                if (state.children.isEmpty ||
-                    state.status == ChildrenStatus.initial) {
-                  return const Center(
-                    child: Text('Nada encontrado aun'),
-                  );
-                }
-        
-                return Column(
-                  children: <Widget>[
-                    buttonsPag(context.read<ChildrenBlocBloc>()),
-                    Table(
-                      border: TableBorder.all(
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(8.0),
-                              bottomRight: Radius.circular(8.0))),
-                      children: [
-                        TableRow(children: [
-                          TableCell(
-                              child: Container(
-                                  color: Colors.green,
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: const Text('Nro - Expediente',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)))),
-                          TableCell(
-                              child: Container(
-                                  color: Colors.green,
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: const Text('Nombres',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)))),
-                          TableCell(
-                              child: Container(
-                                  color: Colors.green,
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: const Text('Apellidos',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)))),
-                          TableCell(
-                              child: Container(
-                                  color: Colors.green,
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: const Text('Acciones',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold)))),
-                        ]),
-                        ...state.children.map((child) => TableRow(children: [
-                              TableCell(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: child.foundationId != null
-                                    ? Text(child.foundationId!.toUpperCase())
-                                    : const Text('No registrado'),
-                              )),
-                              TableCell(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: child.name != null
-                                    ? Text(child.name!.toLowerCase())
-                                    : const Text('No registrado'),
-                              )),
-                              TableCell(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: child.lastName != null
-                                    ? Text(child.lastName!.toLowerCase())
-                                    : const Text('No registrado'),
-                              )),
-                              TableCell(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () => context.go('/system/info/${child.id}'),
-                                        icon: const Icon(
-                                            Icons.remove_red_eye_rounded),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => context.go('/system/edit/${child.id}'),
-                                        icon: const Icon(Icons.edit),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          _showDeleteDialog(
-                                            child,
-                                            context,
-                                            context.read<DeleteChildBloc>(),
-                                            context.read<ChildrenBlocBloc>()
-                                          );
-                                        },
-                                        icon: const Icon(Icons.delete),
-                                      ),
-                                    ]),
-                              ))
-                            ]))
-                      ],
+    return Builder(
+      builder: (context) => MultiBlocListener(
+        listeners: [
+          BlocListener<ChildrenBlocBloc, ChildrenBlocState>(
+            listener: (context, state) {
+              if (state.status == ChildrenStatus.error) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                      content: Text('Algo inesperado paso, verifica tu conexión a internet'),
                     ),
-                    buttonsPag(context.read<ChildrenBlocBloc>()),
-                  ],
+                  );
+              }
+            },
+          ),
+          BlocListener<DeleteChildBloc, DeleteChildState>(
+            listener: (context, state) {
+              if (state.status == DeleteStatus.error && !state.snackBarShown) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text('Algo inesperado paso: //${state.error}'),
+                    ),
+                  );
+                context.read<DeleteChildBloc>().add(SnackBarShown());
+              }
+              if (state.status == DeleteStatus.success && state.snackBarShown == false) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(
+                      content: Text('Elemento eliminado con éxito'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                context.read<DeleteChildBloc>().add(SnackBarShown());
+              }
+            },
+          ),
+        ],
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: BlocBuilder<ChildrenBlocBloc, ChildrenBlocState>(
+                builder: (context, state) {
+              if (state.status == ChildrenStatus.loading &&
+                  state.children.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+      
+              if (state.status == ChildrenStatus.error) {
+                return const Center(
+                  child: Text('Algo inesperado paso'),
                 );
-              }),
-            ),
+              }
+      
+              if (state.children.isEmpty && state.page != 0) {
+                return Center(
+                    child: Column(
+                  children: [
+                    buttonsPag(context.read<ChildrenBlocBloc>()),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const Text('Nada en esta pagina, vuelve a la anterior')
+                  ],
+                ));
+              }
+      
+              if (state.children.isEmpty ||
+                  state.status == ChildrenStatus.initial) {
+                return const Center(
+                  child: Text('Nada encontrado aun'),
+                );
+              }
+      
+              return Column(
+                children: <Widget>[
+                  buttonsPag(context.read<ChildrenBlocBloc>()),
+                  Table(
+                    border: TableBorder.all(
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(8.0),
+                            bottomRight: Radius.circular(8.0))),
+                    children: [
+                      TableRow(children: [
+                        TableCell(
+                            child: Container(
+                                color: Colors.green,
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Text('Nro - Expediente',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)))),
+                        TableCell(
+                            child: Container(
+                                color: Colors.green,
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Text('Nombres',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)))),
+                        TableCell(
+                            child: Container(
+                                color: Colors.green,
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Text('Apellidos',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)))),
+                        TableCell(
+                            child: Container(
+                                color: Colors.green,
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Text('Acciones',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)))),
+                      ]),
+                      ...state.children.map((child) => TableRow(children: [
+                            TableCell(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: child.foundationId != null
+                                  ? Text(child.foundationId!.toUpperCase())
+                                  : const Text('No registrado'),
+                            )),
+                            TableCell(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: child.name != null
+                                  ? Text(child.name!.toLowerCase())
+                                  : const Text('No registrado'),
+                            )),
+                            TableCell(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: child.lastName != null
+                                  ? Text(child.lastName!.toLowerCase())
+                                  : const Text('No registrado'),
+                            )),
+                            TableCell(
+                                child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () => context.push('/system/info/${child.id}'),
+                                      icon: const Icon(
+                                          Icons.remove_red_eye_rounded),
+                                    ),
+                                    IconButton(
+                                      onPressed: () => context.push('/system/edit/${child.id}'),
+                                      icon: const Icon(Icons.edit),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        _showDeleteDialog(
+                                          child,
+                                          context,
+                                          context.read<DeleteChildBloc>(),
+                                          context.read<ChildrenBlocBloc>()
+                                        );
+                                      },
+                                      icon: const Icon(Icons.delete),
+                                    ),
+                                  ]),
+                            ))
+                          ]))
+                    ],
+                  ),
+                  buttonsPag(context.read<ChildrenBlocBloc>()),
+                ],
+              );
+            }),
           ),
         ),
       ),

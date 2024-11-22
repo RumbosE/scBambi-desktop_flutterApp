@@ -61,7 +61,7 @@ class _CustomListTile extends StatelessWidget {
 
       onTap: () {
         if (menuItem.link != '/') {
-          context.go(menuItem.link);
+          context.push(menuItem.link);
         }
       },
     );

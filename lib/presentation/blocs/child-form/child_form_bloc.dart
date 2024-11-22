@@ -33,7 +33,7 @@ class ChildFormCubit extends Cubit<ChildFormState> {
     emit(state.copyWith(status: FormStatus.validating));
     validatePersonalData();
     validateFoundationData();
-    if(state.errors != null || state.status == FormStatus.error){
+    if(state.status == FormStatus.error){
       return;
     }
     
@@ -54,8 +54,8 @@ class ChildFormCubit extends Cubit<ChildFormState> {
   }
 
   void validateFoundationData(){
-    if(state.child.foundationId == null || state.child.foundationId!.isEmpty){
-      emit(state.copyWith(errors: 'Nro Expediente Requerido', status: FormStatus.error));
+    if(state.child.foundationId == null || state.child.foundationId!.isEmpty || state.child.foundationId!.length < 4){
+      emit(state.copyWith(errors: 'Nro Expediente Requerido >=4', status: FormStatus.error));
       return;
     }
     if(state.child.history.courtId == null || state.child.history.courtId!.isEmpty){
@@ -103,8 +103,7 @@ class ChildFormCubit extends Cubit<ChildFormState> {
   }
 
   void setName(String name) { 
-      emit(state.copyWith(child: state.child.copyWith(name: name.nullIfEmpty()), status: FormStatus.validating));
-  
+      emit(state.copyWith(child: state.child.copyWith(name: name), status: FormStatus.validating));
   }
 
   void setLastName(String lastname) {
