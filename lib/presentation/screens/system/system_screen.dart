@@ -27,10 +27,7 @@ class SystemScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            BlocProvider(
-              create: (context) => getIt<SearchFilterCubit>(),
-              child: _FiltersContainer(),
-            ),
+            _FiltersContainer(context),
             const SizedBox(height: 20),
 
             const TableChildren(),
@@ -52,17 +49,21 @@ class SystemScreen extends StatelessWidget {
 
 class _FiltersContainer extends StatelessWidget {
 
-  @override
-  Widget build(BuildContext context) {
+  final BuildContext ctx;
 
-    final filterCubit = context.watch<SearchFilterCubit>();
+  const _FiltersContainer(this.ctx);
+
+  @override
+  Widget build(ctx) {
+
+    final filterCubit = ctx.watch<SearchFilterCubit>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Text('Busqueda por filtros', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor))),
+          child: Text('Busqueda por filtros', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(ctx).primaryColor))),
       
         const SizedBox(height: 20),
         SingleChildScrollView(
@@ -77,7 +78,7 @@ class _FiltersContainer extends StatelessWidget {
                     hint: 'Nombre Apellido o Nro Expediente',
                     labelText: 'Buscar por Nombre, Apellido o Nro Expediente',
                     keyboardType: TextInputType.text,
-                    inputWidth: MediaQuery.of(context).size.width * 0.5,
+                    inputWidth: MediaQuery.of(ctx).size.width * 0.5,
                     onChanged: filterCubit.setFilterParam,
                   ),
                   const SizedBox(width: 8),

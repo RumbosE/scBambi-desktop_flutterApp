@@ -11,6 +11,10 @@ class ChildLoaded extends ChildEvent{
 
 class LoadingStarted extends ChildEvent{}
 
-class ErrorOnChildLoading extends ChildEvent{}
+class ErrorOnChildFetching extends ChildEvent{
+  final String errores;
+  ErrorOnChildFetching({required this.errores});
+}
+
 
 

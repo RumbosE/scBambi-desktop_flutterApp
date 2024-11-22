@@ -10,6 +10,12 @@ String formatDate(DateTime date) {
   return formatter.format(date);
 }
 
+extension StringExtension on String? {
+  String? nullIfEmpty() {
+    return (this == null || this!.isEmpty || this! == '') ? null : this;
+  }
+}
+
 
 final Child initChild = Child(responsible: Responsible(names: [],), history: FoundationHistory());
 
@@ -30,6 +36,7 @@ class ChildFormCubit extends Cubit<ChildFormState> {
     if(state.errors != null || state.status == FormStatus.error){
       return;
     }
+    
     emit(state.copyWith(status: FormStatus.submitting));
     final res = await repository.createUpdateChild(state.child, state.id);
     res.isSuccessful() ? emit(state.copyWith(status: FormStatus.success)) : emit(state.copyWith(status: FormStatus.error, errors: res.getError().toString()));
@@ -85,26 +92,32 @@ class ChildFormCubit extends Cubit<ChildFormState> {
       emit(state.copyWith(errors: 'Cédula Inválida', status: FormStatus.error));
       return;
     }
+
+    if(state.child.birthCertificate != null && state.child.birthCertificate!.length < 5){
+      emit(state.copyWith(errors: 'Certificado Inválido', status: FormStatus.error));
+      return;
+    }
     
     emit(state.copyWith(errors: null, status: FormStatus.valid));
     return;
   }
 
   void setName(String name) { 
-      emit(state.copyWith(child: state.child.copyWith(name: name), status: FormStatus.validating));
+      emit(state.copyWith(child: state.child.copyWith(name: name.nullIfEmpty()), status: FormStatus.validating));
   
   }
 
   void setLastName(String lastname) {
-      emit(state.copyWith(child: state.child.copyWith(lastName: lastname), status: FormStatus.validating));
+      emit(state.copyWith(child: state.child.copyWith(lastName: lastname.nullIfEmpty()), status: FormStatus.validating));
   }
 
   void setBirthCertificate(String text){
-    emit(state.copyWith(child: state.child.copyWith(birthCertificate: text), status: FormStatus.validating));
+
+    emit(state.copyWith(child: state.child.copyWith(birthCertificate: text.nullIfEmpty()), status: FormStatus.validating));
   }
 
   void setIdentification(String id){
-    emit(state.copyWith(child: state.child.copyWith(personalId: id), status: FormStatus.validating));
+    emit(state.copyWith(child: state.child.copyWith(personalId: id.nullIfEmpty()), status: FormStatus.validating));
   }
 
   void pushResponsibleName(String name){

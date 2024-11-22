@@ -15,22 +15,13 @@ class ChildBloc extends Bloc<ChildEvent, ChildState> {
 
   ChildBloc(this.childRepository) 
     : super(ChildState(child: initialState)) {
-      on<ChildLoaded>(_onChildLoaded);
       on<LoadingStarted>(_onLoadingStarted);
-      on<ErrorOnChildLoading>(_onErrorOnChildLoading);
-  }
-
-  void _onChildLoaded(ChildLoaded event, Emitter<ChildState> emit) {
-    emit(state.copyWith(child: event.child, status: ChildDetailsStatus.loaded));
+      on<ChildLoaded>((event, emit) => emit(state.copyWith(child: event.child, status: ChildDetailsStatus.loaded)));
+      on<ErrorOnChildFetching>((event, emit) => emit(state.copyWith(errors: event.errores, status: ChildDetailsStatus.error)));
   }
 
   void _onLoadingStarted(LoadingStarted event, Emitter<ChildState> emit) {
     emit(state.copyWith(status: ChildDetailsStatus.loading));
-  }
-
-  void _onErrorOnChildLoading(
-      ErrorOnChildLoading event, Emitter<ChildState> emit) {
-    emit(state.copyWith(status: ChildDetailsStatus.error));
   }
 
   Future<void> loadChildById(String childId) async{
@@ -46,6 +37,6 @@ class ChildBloc extends Bloc<ChildEvent, ChildState> {
       add(ChildLoaded(child: child));
       return;
     }
-    add(ErrorOnChildLoading());
+    add(ErrorOnChildFetching(errores: childResponse.getError().toString()));
   }
 }

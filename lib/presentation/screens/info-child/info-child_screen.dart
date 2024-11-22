@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sc_flutter_app/domain/child/entities/child.dart';
 import 'package:sc_flutter_app/injector.dart';
 import 'package:sc_flutter_app/presentation/blocs/child-details/child_bloc.dart';
+import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
 import 'widgets/info_child_widgets.dart';
 
 class InfoChildScreen extends StatelessWidget {
@@ -16,7 +17,7 @@ class InfoChildScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<ChildBloc>()..loadChildById(idChild),
+      create: (context) => getIt<ChildBloc>()..loadChildById(idChild),
       child: const _ChildView(),
     );
   }
@@ -43,7 +44,16 @@ class _ChildView extends StatelessWidget {
               children: [
                 const Icon(Icons.error, color: Colors.red, size: 50,),
                 const Text('Error al cargar la información'),
-                IconButton(onPressed: () => context.go('/system'), icon: const Icon(Icons.arrow_back_rounded)),
+                Text('Info error -> ${state.errors}', style: const TextStyle(fontSize: 10, color: Colors.redAccent),),
+                const SizedBox(height: 8,),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    context.read<SearchFilterCubit>().reset();
+                    context.go('/system');
+                  },
+                  label: const Text('Volver atras'),
+                  icon: const Icon(Icons.arrow_back_rounded)
+                ),
               ],
             ),
           );
@@ -54,7 +64,9 @@ class _ChildView extends StatelessWidget {
             backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () => context.go('/system'),
+              onPressed: () {
+                context.read<SearchFilterCubit>().reset();
+                context.go('/system');},
             ),
             title: const Text('Información',
                 style: TextStyle(

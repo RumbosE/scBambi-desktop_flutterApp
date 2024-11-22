@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sc_flutter_app/injector.dart';
 import 'package:sc_flutter_app/presentation/blocs/child-form/child_form_bloc.dart';
+import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
 import 'package:sc_flutter_app/presentation/screens/info-child/widgets/HeaderInfo-widget.dart';
 import 'package:sc_flutter_app/presentation/widgets/widgets.dart';
 
@@ -30,7 +31,10 @@ class _FormChildScreenState extends State<FormChildScreen> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
             color: Colors.white,
-            onPressed: () => context.go('/system'),
+            onPressed: () {
+              context.read<SearchFilterCubit>().reset();
+              context.go('/system');
+            },
           ),
         ),
         body: Padding(
@@ -42,6 +46,14 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   const SnackBar(
                     content: Text('Guardado con exito'),
                     backgroundColor: Colors.green,
+                  ),
+                );
+              }
+              if (state.status == FormStatus.error){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: ${state.errors}'),
+                    backgroundColor: Colors.red,
                   ),
                 );
               }
@@ -92,7 +104,13 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       if (isLastStep) {
                         await formCubit.onSubmitted();
                         if (formCubit.state.status == FormStatus.success) {
-                          widget.id != null ? context.go('/system/info/${widget.id}') : context.go('/system');
+                          // widget.id != null ? context.go('/system/info/${widget.id}') : context.go('/system');
+                          if(widget.id != null){
+                            context.go('/system/info/${widget.id}');
+                          }else{
+                             context.read<SearchFilterCubit>().reset();
+                            context.go('/system');
+                          }
                         }
                         return;
                       }
@@ -157,8 +175,8 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     labelText: 'Apellidos *',
                     hint: '*Campo requerido*',
                     initialState: fcubit.state.child.lastName,
-                    errorMessage:(fcubit.state.child.lastName == null ||
-                                fcubit.state.child.lastName!.isEmpty)
+                    errorMessage:fcubit.state.child.lastName == null ||
+                                fcubit.state.child.lastName!.isEmpty
                               ? 'El apellido es requerido'
                               : null,
                     onChanged: fcubit.setLastName,
@@ -174,7 +192,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     initialState: fcubit.state.child.personalId,
                     onChanged: fcubit.setIdentification,
                     inputWidth: double.infinity,
-                    errorMessage: (fcubit.state.child.personalId != null && fcubit.state.child.personalId!.length < 8)
+                    errorMessage: (fcubit.state.child.personalId != null && (fcubit.state.child.personalId!.length > 1 && fcubit.state.child.personalId!.length < 8))
                               ? 'La identificacion no puede ser menor a 8 caracteres'
                               : null,
                   ),
@@ -187,6 +205,9 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     keyboardType: TextInputType.text,
                     onChanged: fcubit.setBirthCertificate,
                     inputWidth: double.infinity,
+                    errorMessage: (fcubit.state.child.birthCertificate != null && (fcubit.state.child.birthCertificate!.length < 5 && fcubit.state.child.birthCertificate!.length >1))
+                              ? 'El certificado de nacimiento no puede ser menor a 5 caracteres'
+                              : null,
                   ),
                 ],
               ),
@@ -241,7 +262,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       inputWidth: double.infinity,
                       initialState: fcubit.state.child.foundationId,
                       errorMessage: (fcubit.state.child.foundationId == null ||
-                                fcubit.state.child.lastName!.isEmpty)
+                                fcubit.state.child.foundationId!.isEmpty)
                               ? 'El Nro de Expediente interno es requerido'
                               : null,
                     ),
@@ -327,7 +348,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   labelText: 'Organización Judicial*',
                   keyboardType: TextInputType.text,
                   onChanged: fcubit.setFoundationOrganization,
-                  maxLines: 2,
+                  maxLines: 3,
                   inputWidth: double.infinity,
                   initialState: fcubit.state.child.lastName,
                   errorMessage:(fcubit.state.child.history.organization == null ||
