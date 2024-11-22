@@ -18,8 +18,8 @@ class ChildRepositoryImpl extends IChildRepository {
       try {
       await childDatasource.createUpdateChild(child, id);
       return Result<bool>.success(true);
-    } catch (e) {
-        print('error en el repositorio: $e');
+    } catch (e,s) {
+      print('error en el repositorio: $e , $s');
       return Result<bool>.fail(Exception('Failed on update: ${e.toString()}'));
     }
   }

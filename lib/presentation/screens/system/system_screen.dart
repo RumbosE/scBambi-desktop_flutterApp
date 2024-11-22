@@ -41,7 +41,10 @@ class SystemScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
           icon: const Icon(Icons.add),
           label: const Text('Agregar al sistema'),
-          onPressed: () => context.go('/system/form'),
+          onPressed: () async{
+            context.go('/system/form/');
+            context.read<SearchFilterCubit>().reset();
+          },
       ),
     );
   }
@@ -78,7 +81,11 @@ class _FiltersContainer extends StatelessWidget {
                     onChanged: filterCubit.setFilterParam,
                   ),
                   const SizedBox(width: 8),
-                  ElevatedButton.icon(onPressed: filterCubit.onSubmitted, label: const Text('Buscar'), icon: const Icon(Icons.search)),
+                  ElevatedButton.icon(
+                    onPressed: filterCubit.onSubmitted,
+                    label: const Text('Buscar'), 
+                    icon: const Icon(Icons.search)
+                  ),
                 ],
               ),
             ),

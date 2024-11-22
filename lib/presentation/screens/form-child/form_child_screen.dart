@@ -92,7 +92,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       if (isLastStep) {
                         await formCubit.onSubmitted();
                         if (formCubit.state.status == FormStatus.success) {
-                          context.go('/system/info/${formCubit.state.id}');
+                          widget.id != null ? context.go('/system/info/${widget.id}') : context.go('/system');
                         }
                         return;
                       }
@@ -174,6 +174,9 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     initialState: fcubit.state.child.personalId,
                     onChanged: fcubit.setIdentification,
                     inputWidth: double.infinity,
+                    errorMessage: (fcubit.state.child.personalId != null && fcubit.state.child.personalId!.length < 8)
+                              ? 'La identificacion no puede ser menor a 8 caracteres'
+                              : null,
                   ),
                   const SizedBox(
                     height: 24,

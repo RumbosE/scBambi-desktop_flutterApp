@@ -186,12 +186,12 @@ class _TableChildrenView extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       IconButton(
-                                        onPressed: () => context.push('/system/info/${child.id}'),
+                                        onPressed: () => context.go('/system/info/${child.id}'),
                                         icon: const Icon(
                                             Icons.remove_red_eye_rounded),
                                       ),
                                       IconButton(
-                                        onPressed: () => context.push('/system/edit/${child.id}'),
+                                        onPressed: () => context.go('/system/edit/${child.id}'),
                                         icon: const Icon(Icons.edit),
                                       ),
                                       IconButton(

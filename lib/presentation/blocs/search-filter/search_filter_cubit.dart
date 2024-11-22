@@ -25,9 +25,14 @@ class SearchFilterCubit extends Cubit<SearchFilterState> {
   void setPage(int page) {
     childrenBloc.setPage(page);
   }
-
-
-  void clear() {
+void reset() {
     emit(const SearchFilterState());
+    childrenBloc.add(RefreshChildren());
+  }
+
+  @override
+  Future<void> close() {
+    // Limpia el estado aquí si es necesario
+    return super.close();
   }
 }

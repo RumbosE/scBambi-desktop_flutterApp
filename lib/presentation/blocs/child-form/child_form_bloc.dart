@@ -81,6 +81,11 @@ class ChildFormCubit extends Cubit<ChildFormState> {
       return;
     }
     
+    if(state.child.personalId != null && state.child.personalId!.length < 8){
+      emit(state.copyWith(errors: 'Cédula Inválida', status: FormStatus.error));
+      return;
+    }
+    
     emit(state.copyWith(errors: null, status: FormStatus.valid));
     return;
   }

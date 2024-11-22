@@ -12,12 +12,22 @@ class ApiChildDatasourceImpl extends ChildDatasource {
   Future<void> createUpdateChild(Child child, String? id) async {
 
     final c=child.toJson();
-
+try {
     if (id == null) {
       await dio.post('/', data: c);
     } else {
       await dio.put('/$id/', data: c);
     }
+  } on DioException catch (e) {
+    if (e.response?.statusCode == 422) {
+      // Maneja el error 422 aquí
+      print('Error 422: ${e.response?.data}');
+    } else {
+      // Maneja otros errores aquí
+      print('Error: ${e.message}');
+    }
+    rethrow;
+  }
   }
 
   @override
