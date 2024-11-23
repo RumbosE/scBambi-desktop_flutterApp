@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:sc_flutter_app/domain/child/entities/child.dart';
 import 'package:sc_flutter_app/injector.dart';
 import 'package:sc_flutter_app/presentation/blocs/child-details/child_bloc.dart';
+import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
+import 'package:sc_flutter_app/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
 import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
 import 'widgets/info_child_widgets.dart';
 
@@ -65,52 +67,109 @@ class _ChildView extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
               onPressed: () {
+                context.read<SearchFilterCubit>().reset();
                 context.pop();
               },
             ),
             title: const Text('Información',
                 style: TextStyle(
                     color: Colors.black54, fontWeight: FontWeight.w400)),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32.0),
-            child: _ChildDetailsView(state.child),
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () =>context.push('/system/edit/${state.child.id}'),
-            icon: const Icon(Icons.edit),
-            label: const Text('Editar'),
-          ),
+            
+            actions: [
+                PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'edit') {
+                  context.push('/system/edit/${state.child.id}');
+                  } else if (value == 'delete') {
+                  // Add your delete logic here
+                    _showDeleteDialog(state.child, context, context.read<DeleteChildBloc>(), context.read<ChildrenBlocBloc>());
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: Text('Editar'),
+                  ),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Text('Eliminar'),
+                  ),
+                  ];
+                },
+                icon: const Icon(Icons.more_vert),
+                )
+              ],
+              ),
+              body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32.0),
+              child: _ChildDetailsView(state.child),
+              ),
+              floatingActionButton: FloatingActionButton.extended(
+              onPressed: () => context.push('/system/edit/${state.child.id}'),
+              icon: const Icon(Icons.edit),
+              label: const Text('Editar'),
+              ),
+            );
+            },
+          );
+    }
+
+    void _showDeleteDialog(Child child, BuildContext context, DeleteChildBloc bloc, ChildrenBlocBloc children) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar eliminación'),
+          content:
+              const Text('¿Estás seguro de que deseas eliminar este registro?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (child.id != null) {
+                  bloc.add(DeleteChildEvent(id: child.id!, bloc: children));
+                }
+                context.go('/system');
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
         );
       },
     );
   }
 }
 
-class _ChildDetailsView extends StatelessWidget {
-  final Child child;
+        class _ChildDetailsView extends StatelessWidget {
+          final Child child;
 
-  const _ChildDetailsView(this.child);
+          const _ChildDetailsView(this.child);
 
-  @override
-  Widget build(BuildContext context) {
+          @override
+          Widget build(BuildContext context) {
 
-    final colors = Theme.of(context).colorScheme;
+          final colors = Theme.of(context).colorScheme;
 
-    return Center(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Card(
-              color: Colors.white,
-              elevation: 5,
-              shape: RoundedRectangleBorder(
+          return Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Card(
+                color: Colors.white,
+                elevation: 5,
+                shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
+                ),
+                child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const HeaderInfo(title: 'Datos Personales'),
                       ItemInfoChild(title: 'Nombre', value: child.name),
@@ -140,11 +199,11 @@ class _ChildDetailsView extends StatelessWidget {
                       const SizedBox(height: 8,),
                       ItemInfoChild(title: 'Nro. Expediente Tribunal', value: child.history.courtId),
                       const SizedBox(height: 8,),
-                      ItemInfoChild(title: 'Fecha de Ingreso', value: child.history.entryDate.toString()),
+                      ItemInfoChild(title: 'Fecha de Ingreso', value: child.history.entryDate.toString().deleteBrackets()),
                       const SizedBox(height: 16,),
                       _ListItemWidget (title: 'Motivo(s) Ingreso', items: child.history.entryReason),
                       const SizedBox(height: 8,),
-                      ItemInfoChild(title: 'Fecha de Salida', value: child.history.departureDate.toString()),
+                      ItemInfoChild(title: 'Fecha de Salida', value: child.history.departureDate.toString().deleteBrackets()),
                       const SizedBox(height: 8,),
                       ItemInfoChild(title: 'Motivo Salida', value: child.history.departureReason),
                       const SizedBox(height: 8,),
@@ -154,7 +213,7 @@ class _ChildDetailsView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Organización Judicial: ${child.foundationId?? ' '}',
+                        child: Text('Organización Judicial: ${child.foundationId?? ''}',
                             style: const TextStyle(
                                 color: Colors.black45,
                                 fontStyle: FontStyle.italic,

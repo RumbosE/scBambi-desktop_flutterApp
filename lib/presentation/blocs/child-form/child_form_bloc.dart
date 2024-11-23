@@ -10,12 +10,6 @@ String formatDate(DateTime date) {
   return formatter.format(date);
 }
 
-extension StringExtension on String? {
-  String? nullIfEmpty() {
-    return (this == null || this!.isEmpty || this! == '') ? null : this;
-  }
-}
-
 
 final Child initChild = Child(responsible: Responsible(names: [],), history: FoundationHistory());
 
@@ -39,13 +33,11 @@ class ChildFormCubit extends Cubit<ChildFormState> {
     
     emit(state.copyWith(status: FormStatus.submitting));
     final res = await repository.createUpdateChild(state.child, state.id);
-    res.isSuccessful() ? emit(state.copyWith(status: FormStatus.success)) : emit(state.copyWith(status: FormStatus.error, errors: res.getError().toString()));
-
-    
+    res.isSuccessful() ? emit(state.copyWith(status: FormStatus.success)) : emit(state.copyWith(status: FormStatus.error, errors: res.getError().toString()));    
   }
 
-  Future<void> init(String? id) async{
-    
+  
+  Future<void> init(String? id) async{    
     if(id != null && id.isNotEmpty){
       emit(state.copyWith(status: FormStatus.loading));
       final res = await repository.getChild(id);
@@ -53,13 +45,43 @@ class ChildFormCubit extends Cubit<ChildFormState> {
     }
   }
 
+  void validatePersonalData(){
+    setSnakBarShown(false);
+
+    if(state.child.name == null || state.child.name!.isEmpty || state.child.name!.length <2){
+      emit(state.copyWith(errors: 'Nombre Requerido', status: FormStatus.error));
+      return;
+    }
+    
+    if(state.child.lastName == null || state.child.lastName!.isEmpty || state.child.lastName!.length <2){
+      emit(state.copyWith(errors: 'Apellido Requerido', status: FormStatus.error));
+      return;
+    }
+    
+    if(state.child.personalId != null && state.child.personalId!.isNotEmpty && state.child.personalId!.length < 8){
+      emit(state.copyWith(errors: 'Cédula Inválida', status: FormStatus.error));
+      return;
+    }
+
+    if(state.child.birthCertificate != null && state.child.birthCertificate!.isNotEmpty && state.child.birthCertificate!.length < 5){
+      emit(state.copyWith(errors: 'Certificado Inválido', status: FormStatus.error));
+      return;
+    }
+    
+    emit(state.copyWith(errors: null, status: FormStatus.valid));
+    return;
+  }
+
   void validateFoundationData(){
+
+    setSnakBarShown(false);
+
     if(state.child.foundationId == null || state.child.foundationId!.isEmpty || state.child.foundationId!.length < 4){
       emit(state.copyWith(errors: 'Nro Expediente Requerido >=4', status: FormStatus.error));
       return;
     }
-    if(state.child.history.courtId == null || state.child.history.courtId!.isEmpty){
-      emit(state.copyWith(errors: 'Nro Expediente Tribunal Requerido', status: FormStatus.error));
+    if(state.child.history.courtId == null || state.child.history.courtId!.isEmpty || state.child.history.courtId!.length <4){
+      emit(state.copyWith(errors: 'Nro Expediente Tribunal Requerido >=4', status: FormStatus.error));
       return;
     }
     if(state.child.history.entryDate.isEmpty){
@@ -78,45 +100,21 @@ class ChildFormCubit extends Cubit<ChildFormState> {
     return;
   }
 
-  void validatePersonalData(){
-    if(state.child.name == null || state.child.name!.isEmpty){
-      emit(state.copyWith(errors: 'Nombre Requerido', status: FormStatus.error));
-      return;
-    }
-    if(state.child.lastName == null || state.child.lastName!.isEmpty){
-      emit(state.copyWith(errors: 'Apellido Requerido', status: FormStatus.error));
-      return;
-    }
-    
-    if(state.child.personalId != null && state.child.personalId!.length < 8){
-      emit(state.copyWith(errors: 'Cédula Inválida', status: FormStatus.error));
-      return;
-    }
-
-    if(state.child.birthCertificate != null && state.child.birthCertificate!.length < 5){
-      emit(state.copyWith(errors: 'Certificado Inválido', status: FormStatus.error));
-      return;
-    }
-    
-    emit(state.copyWith(errors: null, status: FormStatus.valid));
-    return;
-  }
-
-  void setName(String name) { 
-      emit(state.copyWith(child: state.child.copyWith(name: name), status: FormStatus.validating));
+  void setName(String name) {
+    emit(state.copyWith(child: state.child.copyWith(name: name)));
   }
 
   void setLastName(String lastname) {
-      emit(state.copyWith(child: state.child.copyWith(lastName: lastname.nullIfEmpty()), status: FormStatus.validating));
+      emit(state.copyWith(child: state.child.copyWith(lastName: lastname)));
   }
 
   void setBirthCertificate(String text){
 
-    emit(state.copyWith(child: state.child.copyWith(birthCertificate: text.nullIfEmpty()), status: FormStatus.validating));
+    emit(state.copyWith(child: state.child.copyWith(birthCertificate: text)));
   }
 
-  void setIdentification(String id){
-    emit(state.copyWith(child: state.child.copyWith(personalId: id.nullIfEmpty()), status: FormStatus.validating));
+  void setIdentification(String id){ 
+    emit(state.copyWith(child: state.child.copyWith(personalId: id)));
   }
 
   void pushResponsibleName(String name){

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sc_flutter_app/domain/child/entities/child.dart';
-import 'package:sc_flutter_app/injector.dart';
 
 import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
 import 'package:sc_flutter_app/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
@@ -257,7 +256,7 @@ class _TableChildrenView extends StatelessWidget {
           Text('Página ${childrenBloc.state.page + 1}'),
           const SizedBox(width: 10),
           ElevatedButton(
-            onPressed: childrenBloc.state.children.isEmpty
+            onPressed: childrenBloc.state.children.isEmpty || childrenBloc.state.children.length < childrenBloc.state.perPage
                 ? null
                 : () => childrenBloc.setPage(childrenBloc.state.page + 1),
             child: const Text('Siguiente'),

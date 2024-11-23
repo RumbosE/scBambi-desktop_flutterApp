@@ -19,7 +19,7 @@ class SystemScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back_rounded),
             color: Colors.white,
             onPressed: () {
-              context.pop();
+              context.go('/');
             }),
       ),
       body: SingleChildScrollView(
@@ -73,8 +73,8 @@ class _FiltersContainer extends StatelessWidget {
                 children: [
                   CustomInput(
                     icon: const Icon(Icons.boy),
-                    hint: 'Nombre Apellido o Nro Expediente',
-                    labelText: 'Buscar por Nombre, Apellido o Nro Expediente',
+                    hint: 'Por nombre, apellido, nros expedientes o fechas',
+                    labelText: 'Busqueda',
                     keyboardType: TextInputType.text,
                     inputWidth: MediaQuery.of(ctx).size.width * 0.5,
                     onChanged: filterCubit.setFilterParam,

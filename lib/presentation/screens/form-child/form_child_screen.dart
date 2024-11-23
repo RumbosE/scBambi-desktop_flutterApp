@@ -49,13 +49,15 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   ),
                 );
               }
-              if (state.status == FormStatus.error){
+              if (state.status == FormStatus.error && state.snackBarShown == false){
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Error: ${state.errors}'),
                     backgroundColor: Colors.red,
                   ),
                 );
+
+                context.read<ChildFormCubit>().setSnakBarShown(true);
               }
               if (state.status == FormStatus.submitting) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -104,12 +106,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       if (isLastStep) {
                         await formCubit.onSubmitted();
                         if (formCubit.state.status == FormStatus.success) {
-                          // widget.id != null ? context.go('/system/info/${widget.id}') : context.go('/system');
-                          if(widget.id != null){
-                            context.push('/system/info/${widget.id}');
-                          }else{
-                            context.push('/system');
-                          }
+                          widget.id != null ? context.push('/system/info/${widget.id}') : context.go('/system');
                         }
                         return;
                       }
@@ -156,17 +153,18 @@ class _FormChildScreenState extends State<FormChildScreen> {
                 children: <Widget>[
                   const HeaderInfo(title: 'Datos Personales'),
                   CustomInput(
-                    labelText: 'Nombres *',
-                    keyboardType: TextInputType.text,
-                    initialState: fcubit.state.child.name,
-                    hint: '*Campo requerido*',
-                    errorMessage: (fcubit.state.child.name == null ||
-                                fcubit.state.child.name!.isEmpty)
-                              ? 'El nombre es requerido'
+                      labelText: 'Nombres *',
+                      hint: '*Campo requerido*',
+                      keyboardType: TextInputType.text,
+                      onChanged: fcubit.setName,
+                      inputWidth: double.infinity,
+                      initialState: fcubit.state.child.name,
+                      errorMessage:(fcubit.state.child.name == null ||
+                                fcubit.state.child.name!.isEmpty ||
+                                fcubit.state.child.name!.length <2)
+                              ? 'El Nombre es requerido mayor a 1 caracter'
                               : null,
-                    onChanged: fcubit.setName,
-                    inputWidth: double.infinity,
-                  ),
+                    ),
                   const SizedBox(
                     height: 24,
                   ),
@@ -174,9 +172,10 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     labelText: 'Apellidos *',
                     hint: '*Campo requerido*',
                     initialState: fcubit.state.child.lastName,
-                    errorMessage:fcubit.state.child.lastName == null ||
-                                fcubit.state.child.lastName!.isEmpty
-                              ? 'El apellido es requerido'
+                    errorMessage:(fcubit.state.child.lastName == null ||
+                                fcubit.state.child.lastName!.isEmpty ||
+                                fcubit.state.child.lastName!.length <2)
+                              ? 'El apellido es requerido mayor a 1 caracter'
                               : null,
                     onChanged: fcubit.setLastName,
                     keyboardType: TextInputType.text,
@@ -191,7 +190,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     initialState: fcubit.state.child.personalId,
                     onChanged: fcubit.setIdentification,
                     inputWidth: double.infinity,
-                    errorMessage: (fcubit.state.child.personalId != null && (fcubit.state.child.personalId!.length > 1 && fcubit.state.child.personalId!.length < 8))
+                    errorMessage: (fcubit.state.child.personalId != null && fcubit.state.child.personalId!.isNotEmpty && fcubit.state.child.personalId!.length < 8)
                               ? 'La identificacion no puede ser menor a 8 caracteres'
                               : null,
                   ),
@@ -204,7 +203,7 @@ class _FormChildScreenState extends State<FormChildScreen> {
                     keyboardType: TextInputType.text,
                     onChanged: fcubit.setBirthCertificate,
                     inputWidth: double.infinity,
-                    errorMessage: (fcubit.state.child.birthCertificate != null && (fcubit.state.child.birthCertificate!.length < 5 && fcubit.state.child.birthCertificate!.length >1))
+                    errorMessage: (fcubit.state.child.birthCertificate != null && fcubit.state.child.birthCertificate!.isNotEmpty && fcubit.state.child.birthCertificate!.length < 5)
                               ? 'El certificado de nacimiento no puede ser menor a 5 caracteres'
                               : null,
                   ),
@@ -261,8 +260,8 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       inputWidth: double.infinity,
                       initialState: fcubit.state.child.foundationId,
                       errorMessage: (fcubit.state.child.foundationId == null ||
-                                fcubit.state.child.foundationId!.isEmpty)
-                              ? 'El Nro de Expediente interno es requerido'
+                                fcubit.state.child.foundationId!.isEmpty || fcubit.state.child.foundationId!.length <4)
+                              ? 'Requerido mayor a 3 caracteres'
                               : null,
                     ),
                   ),
@@ -278,8 +277,8 @@ class _FormChildScreenState extends State<FormChildScreen> {
                       inputWidth: double.infinity,
                       initialState: fcubit.state.child.history.courtId,
                       errorMessage:(fcubit.state.child.history.courtId == null ||
-                                fcubit.state.child.history.courtId!.isEmpty)
-                              ? 'El Nro de Expediente tribunal es requerido'
+                                fcubit.state.child.history.courtId!.isEmpty || fcubit.state.child.history.courtId!.length <4)
+                              ? 'Requerido mayor a 3 caracteres'
                               : null,
                     ),
                   ),
@@ -351,8 +350,8 @@ class _FormChildScreenState extends State<FormChildScreen> {
                   inputWidth: double.infinity,
                   initialState: fcubit.state.child.lastName,
                   errorMessage:(fcubit.state.child.history.organization == null ||
-                              fcubit.state.child.history.organization!.isEmpty)
-                            ? 'Una descripcion de la organizacion judicial es requerida'
+                              fcubit.state.child.history.organization!.isEmpty || fcubit.state.child.history.organization!.length <5)
+                            ? 'Requerido mayor de 4 caracteres'
                             : null,
                 )
               ],

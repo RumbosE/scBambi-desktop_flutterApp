@@ -1,7 +1,7 @@
 class Child {
   final String? id;
   final String? foundationId;
-  final String? name;
+  late String? name;
   final String? lastName;
   final String? personalId;
   final String? birthCertificate;
@@ -28,15 +28,14 @@ class Child {
     String? birthCertificate,
     Responsible? responsible,
     FoundationHistory? history,
-
   }) {
     return Child(
-      id: id?? this.id,
-      foundationId: foundationId ?? this.foundationId,
-      name: name ?? this.name,
-      lastName: lastName ?? this.lastName,
-      personalId: personalId ?? this.personalId,
-      birthCertificate: birthCertificate ?? this.birthCertificate,
+      id: id ?? this.id,
+      foundationId: foundationId!=null ? foundationId.nullIfEmpty() :this.foundationId,
+      name: name !=null ? name.nullIfEmpty() : this.name,
+      lastName: lastName != null ? lastName.nullIfEmpty() : this.name,
+      personalId: personalId != null ? personalId.nullIfEmpty(): this.personalId,
+      birthCertificate: birthCertificate != null? birthCertificate.nullIfEmpty(): this.birthCertificate,
       responsible: responsible ?? this.responsible,
       history: history ?? this.history,
     );
@@ -99,7 +98,7 @@ class Child {
 
 class Responsible {
   final List<String>? names;
-  final List<String>?docsId;
+  final List<String>? docsId;
   final List<String>? contactNro;
 
   Responsible({
@@ -148,13 +147,25 @@ class FoundationHistory {
     String? organization,
   }) {
     return FoundationHistory(
-      courtId: courtId ?? this.courtId,
+      courtId: courtId != null ? courtId.nullIfEmpty() : this.courtId,
       entryDate: entryDate ?? this.entryDate,
       departureDate: departureDate ?? this.departureDate,
       entryReason: entryReason ?? this.entryReason,
-      departureReason: departureReason ?? this.departureReason,
-      organization: organization ?? this.organization,
+      departureReason: departureReason != null? departureReason.nullIfEmpty() : this.departureReason,
+      organization: organization != null ? organization.nullIfEmpty() : this.organization,
     );
   }
 
+}
+
+extension StringExtension on String? {
+  String? nullIfEmpty() {
+    return (this == null || this!.trim().isEmpty || this == '') ? null : this;
+  }
+
+  String? deleteBrackets(){
+    if(this == null) return null;
+
+    return this!.replaceAll('[', '').replaceAll(']', '');
+  }
 }
