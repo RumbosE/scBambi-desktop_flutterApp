@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
-import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
-import 'package:sc_flutter_app/presentation/blocs/core/safe_bloc.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/repositories/child_repository.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/core/safe_bloc.dart';
 
 part 'child_bloc_event.dart';
 part 'child_bloc_state.dart';

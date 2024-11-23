@@ -1,5 +1,5 @@
-import 'package:sc_flutter_app/common/result.dart';
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/common/result.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
 
 abstract class IChildRepository {
   Future<Result<Child>> getChild(String id);

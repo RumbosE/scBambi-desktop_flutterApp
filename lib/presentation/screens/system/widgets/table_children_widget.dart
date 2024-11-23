@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
 
-import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/children/child_bloc_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
 
 class TableChildren extends StatelessWidget {
   const TableChildren({super.key});

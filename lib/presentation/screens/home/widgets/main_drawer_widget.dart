@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sc_flutter_app/config/drawer/drawer_items.dart';
+import 'package:bambi_socio_legal_scapp/config/drawer/drawer_items.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({

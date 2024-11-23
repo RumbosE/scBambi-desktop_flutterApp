@@ -1,6 +1,6 @@
-import 'package:sc_flutter_app/domain/child/datasource/child_datasource.dart';
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
-import 'package:sc_flutter_app/infraestructure/core/enviroments.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/datasource/child_datasource.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/infraestructure/core/enviroments.dart';
 import 'package:dio/dio.dart';
 
 

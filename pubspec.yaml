@@ -1,5 +1,5 @@
-name: sc_flutter_app
-description: "A new Flutter project."
+name: bambi_socio_legal_scapp
+description: "Proyecto para la administracion sociolegal de la fundacion bambi hogar"
 publish_to: 'none'
 version: 0.1.0
 
@@ -25,7 +25,7 @@ dev_dependencies:
 
   msix: 2.8.18
 msix_config:
-  displayName: "Socio-legal DesktopApp"
+  displayName: "BambiSocioLegal.SCApp"
   identityName: "SCSocioLegalApp"
   publisherDisplayName: "SC-UCAB"
   msix_version: 1.0.0.0  

@@ -1,4 +1,4 @@
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
 
 abstract class ChildDatasource {
   Future<Child> getChild(String id);

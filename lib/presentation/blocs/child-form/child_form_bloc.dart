@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
-import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/repositories/child_repository.dart';
 import 'package:intl/intl.dart';
 part 'child_form_state.dart';
 

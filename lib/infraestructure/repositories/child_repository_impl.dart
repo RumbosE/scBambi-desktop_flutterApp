@@ -1,7 +1,7 @@
-import 'package:sc_flutter_app/common/result.dart';
-import 'package:sc_flutter_app/domain/child/entities/child.dart';
-import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
-import 'package:sc_flutter_app/infraestructure/datasources/api_child_datasource_dart.dart';
+import 'package:bambi_socio_legal_scapp/common/result.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/entities/child.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/repositories/child_repository.dart';
+import 'package:bambi_socio_legal_scapp/infraestructure/datasources/api_child_datasource_dart.dart';
 import 'package:dio/dio.dart';
 
 class ChildRepositoryImpl extends IChildRepository {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
-import 'package:sc_flutter_app/presentation/screens/system/widgets/system_widgets.dart';
-import 'package:sc_flutter_app/presentation/widgets/custom-input_widgets.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/search-filter/search_filter_cubit.dart';
+import 'package:bambi_socio_legal_scapp/presentation/screens/system/widgets/system_widgets.dart';
+import 'package:bambi_socio_legal_scapp/presentation/widgets/custom-input_widgets.dart';
 
 class SystemScreen extends StatelessWidget {
   static const String name = 'system_screen';

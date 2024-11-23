@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sc_flutter_app/presentation/screens/home/widgets/main_drawer_widget.dart';
+import 'package:bambi_socio_legal_scapp/presentation/screens/home/widgets/main_drawer_widget.dart';
 
 class HomeScreen extends StatelessWidget {
 

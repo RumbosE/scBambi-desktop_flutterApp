@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sc_flutter_app/domain/child/repositories/child_repository.dart';
-import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
+import 'package:bambi_socio_legal_scapp/domain/child/repositories/child_repository.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/children/child_bloc_bloc.dart';
 
 part 'delete_child_event.dart';
 part 'delete_child_state.dart';

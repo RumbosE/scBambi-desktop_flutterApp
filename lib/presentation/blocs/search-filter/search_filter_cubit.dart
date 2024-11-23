@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/children/child_bloc_bloc.dart';
 
 part 'search_filter_state.dart';
 

@@ -1,1 +1,1 @@
-export 'package:sc_flutter_app/presentation/screens/system/widgets/table_children_widget.dart';
+export 'package:bambi_socio_legal_scapp/presentation/screens/system/widgets/table_children_widget.dart';

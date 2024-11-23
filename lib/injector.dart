@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
-import 'package:sc_flutter_app/infraestructure/datasources/api_child_datasource_dart.dart';
-import 'package:sc_flutter_app/infraestructure/repositories/child_repository_impl.dart';
-import 'package:sc_flutter_app/presentation/blocs/child-details/child_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/child-form/child_form_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
+import 'package:bambi_socio_legal_scapp/infraestructure/datasources/api_child_datasource_dart.dart';
+import 'package:bambi_socio_legal_scapp/infraestructure/repositories/child_repository_impl.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/child-details/child_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/child-form/child_form_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/children/child_bloc_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/search-filter/search_filter_cubit.dart';
 
 
 

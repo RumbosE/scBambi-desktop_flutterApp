@@ -1,14 +1,15 @@
 
+import 'package:bambi_socio_legal_scapp/config/router/app_router.dart';
+import 'package:bambi_socio_legal_scapp/config/theme/app_theme.dart';
+import 'package:bambi_socio_legal_scapp/injector.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/search-filter/search_filter_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sc_flutter_app/config/router/app_router.dart';
-import 'package:sc_flutter_app/config/theme/app_theme.dart';
-import 'package:sc_flutter_app/infraestructure/core/enviroments.dart';
-import 'package:sc_flutter_app/injector.dart';
-import 'package:sc_flutter_app/presentation/blocs/children/child_bloc_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/delete-child/bloc/delete_child_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
+
+import 'infraestructure/core/enviroments.dart';
+import 'presentation/blocs/children/child_bloc_bloc.dart';
 
 
 void main() async {

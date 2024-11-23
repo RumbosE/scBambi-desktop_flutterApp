@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sc_flutter_app/injector.dart';
-import 'package:sc_flutter_app/presentation/blocs/child-form/child_form_bloc.dart';
-import 'package:sc_flutter_app/presentation/blocs/search-filter/search_filter_cubit.dart';
-import 'package:sc_flutter_app/presentation/screens/info-child/widgets/HeaderInfo-widget.dart';
-import 'package:sc_flutter_app/presentation/widgets/widgets.dart';
+import 'package:bambi_socio_legal_scapp/injector.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/child-form/child_form_bloc.dart';
+import 'package:bambi_socio_legal_scapp/presentation/blocs/search-filter/search_filter_cubit.dart';
+import 'package:bambi_socio_legal_scapp/presentation/screens/info-child/widgets/HeaderInfo-widget.dart';
+import 'package:bambi_socio_legal_scapp/presentation/widgets/widgets.dart';
 
 class FormChildScreen extends StatefulWidget {
   static const String name = 'form_child_screen';
